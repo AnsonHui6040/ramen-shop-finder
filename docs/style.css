@@ -1,0 +1,175 @@
+:root {
+  --bg: #f5f6f8;
+  --panel: #ffffff;
+  --line: #e2e6ea;
+  --text: #1f2937;
+  --subtle: #6b7280;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+}
+
+.topbar h1 {
+  margin: 0 0 6px;
+  font-size: 28px;
+}
+
+.topbar p,
+.meta-block {
+  margin: 0;
+  color: var(--subtle);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  min-height: calc(100vh - 89px);
+}
+
+.sidebar {
+  padding: 16px;
+  border-right: 1px solid var(--line);
+  background: #fafafa;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 14px;
+}
+
+.panel h2 {
+  margin: 0 0 12px;
+  font-size: 16px;
+}
+
+.panel label {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.panel input,
+.panel select {
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.stats #result-count {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.content {
+  display: grid;
+  grid-template-rows: 46vh 1fr;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+  border-bottom: 1px solid var(--line);
+}
+
+.shop-list {
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  overflow: auto;
+}
+
+.shop-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+.shop-card h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.shop-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #f8fafc;
+  font-size: 12px;
+}
+
+.shop-card p {
+  margin: 6px 0;
+  color: #374151;
+  line-height: 1.45;
+}
+
+.shop-links {
+  margin-top: 10px;
+}
+
+.shop-links a {
+  margin-right: 12px;
+  color: inherit;
+}
+
+.style-help {
+  line-height: 1.55;
+  color: #374151;
+  font-size: 14px;
+}
+
+.empty-state {
+  background: var(--panel);
+  border: 1px dashed var(--line);
+  border-radius: 14px;
+  padding: 24px;
+  color: var(--subtle);
+}
+
+@media (max-width: 960px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .content {
+    grid-template-rows: 360px 1fr;
+  }
+}
