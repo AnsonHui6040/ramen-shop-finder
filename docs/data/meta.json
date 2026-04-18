@@ -1,0 +1,17 @@
+{
+  "updatedAt": "2026-04-18T12:00:00+08:00",
+  "regionCount": 1,
+  "regions": [
+    {
+      "region": "台中",
+      "regionCode": "taichung",
+      "shopCount": 3,
+      "defaultMap": {
+        "lat": 24.1617,
+        "lng": 120.6468,
+        "zoom": 12
+      },
+      "dataPath": "./data/taichung.json"
+    }
+  ]
+}
