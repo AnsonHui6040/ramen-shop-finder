@@ -1,0 +1,274 @@
+[
+  {
+    "code": "CKLF",
+    "name": "清亮細緻型",
+    "family": "清亮系",
+    "summary": "清爽、清湯、溫和、細滑，重視乾淨輪廓與俐落入口。",
+    "axisLabels": {
+      "richness": "清爽",
+      "broth": "清湯",
+      "impact": "溫和",
+      "noodle": "細滑"
+    },
+    "ingredientTags": [
+      "CHICKEN",
+      "FISH",
+      "DUCK"
+    ]
+  },
+  {
+    "code": "CKLT",
+    "name": "清湯厚麵型",
+    "family": "清亮系",
+    "summary": "整體偏清亮，但更在意麵體存在感與咬感。",
+    "axisLabels": {
+      "richness": "清爽",
+      "broth": "清湯",
+      "impact": "溫和",
+      "noodle": "粗嚼"
+    },
+    "ingredientTags": [
+      "CHICKEN",
+      "FISH",
+      "PORK"
+    ]
+  },
+  {
+    "code": "CKHF",
+    "name": "清湯銳感型",
+    "family": "清亮系",
+    "summary": "偏清湯，但接受更高鹹感、油感或香氣衝擊。",
+    "axisLabels": {
+      "richness": "清爽",
+      "broth": "清湯",
+      "impact": "重口",
+      "noodle": "細滑"
+    },
+    "ingredientTags": [
+      "DUCK",
+      "FISH",
+      "CHICKEN"
+    ]
+  },
+  {
+    "code": "CKHT",
+    "name": "清湯硬派型",
+    "family": "清亮系",
+    "summary": "清湯、存在感強、刺激度高，整體更有個性。",
+    "axisLabels": {
+      "richness": "清爽",
+      "broth": "清湯",
+      "impact": "重口",
+      "noodle": "粗嚼"
+    },
+    "ingredientTags": [
+      "DUCK",
+      "PORK",
+      "FISH"
+    ]
+  },
+  {
+    "code": "CWLF",
+    "name": "輕白滑順型",
+    "family": "白湯系",
+    "summary": "偏白湯但不厚重，重視滑順與溫和感。",
+    "axisLabels": {
+      "richness": "清爽",
+      "broth": "白湯",
+      "impact": "溫和",
+      "noodle": "細滑"
+    },
+    "ingredientTags": [
+      "CHICKEN",
+      "DUCK",
+      "MISO"
+    ]
+  },
+  {
+    "code": "CWLT",
+    "name": "輕白厚麵型",
+    "family": "白湯系",
+    "summary": "白湯感較明顯，但整體仍偏柔和，麵體更有存在感。",
+    "axisLabels": {
+      "richness": "清爽",
+      "broth": "白湯",
+      "impact": "溫和",
+      "noodle": "粗嚼"
+    },
+    "ingredientTags": [
+      "CHICKEN",
+      "PORK",
+      "MISO"
+    ]
+  },
+  {
+    "code": "CWHF",
+    "name": "白湯細銳型",
+    "family": "白湯系",
+    "summary": "白湯底但帶更高衝擊與更細緻的入口感。",
+    "axisLabels": {
+      "richness": "清爽",
+      "broth": "白湯",
+      "impact": "重口",
+      "noodle": "細滑"
+    },
+    "ingredientTags": [
+      "DUCK",
+      "CHICKEN",
+      "MISO"
+    ]
+  },
+  {
+    "code": "CWHT",
+    "name": "白湯衝擊型",
+    "family": "白湯系",
+    "summary": "白湯、重口、麵感強，個性比一般白湯更鮮明。",
+    "axisLabels": {
+      "richness": "清爽",
+      "broth": "白湯",
+      "impact": "重口",
+      "noodle": "粗嚼"
+    },
+    "ingredientTags": [
+      "DUCK",
+      "PORK",
+      "MISO"
+    ]
+  },
+  {
+    "code": "RKLF",
+    "name": "厚湯細緻型",
+    "family": "厚湯系",
+    "summary": "整體偏厚，但仍保有清湯方向與細緻入口。",
+    "axisLabels": {
+      "richness": "濃厚",
+      "broth": "清湯",
+      "impact": "溫和",
+      "noodle": "細滑"
+    },
+    "ingredientTags": [
+      "BEEF",
+      "FISH",
+      "SHELLFISH"
+    ]
+  },
+  {
+    "code": "RKLT",
+    "name": "厚湯厚麵型",
+    "family": "厚湯系",
+    "summary": "偏厚實清湯系，搭配更有存在感的麵體。",
+    "axisLabels": {
+      "richness": "濃厚",
+      "broth": "清湯",
+      "impact": "溫和",
+      "noodle": "粗嚼"
+    },
+    "ingredientTags": [
+      "BEEF",
+      "PORK",
+      "FISH"
+    ]
+  },
+  {
+    "code": "RKHF",
+    "name": "厚湯銳感型",
+    "family": "厚湯系",
+    "summary": "厚味、清湯輪廓、衝擊感明顯，細麵感較強。",
+    "axisLabels": {
+      "richness": "濃厚",
+      "broth": "清湯",
+      "impact": "重口",
+      "noodle": "細滑"
+    },
+    "ingredientTags": [
+      "BEEF",
+      "DUCK",
+      "FISH"
+    ]
+  },
+  {
+    "code": "RKHT",
+    "name": "厚湯硬派型",
+    "family": "厚湯系",
+    "summary": "厚味清湯、重口、麵感強，整體非常有存在感。",
+    "axisLabels": {
+      "richness": "濃厚",
+      "broth": "清湯",
+      "impact": "重口",
+      "noodle": "粗嚼"
+    },
+    "ingredientTags": [
+      "BEEF",
+      "PORK",
+      "DUCK"
+    ]
+  },
+  {
+    "code": "RWLF",
+    "name": "濃白細滑型",
+    "family": "濃白系",
+    "summary": "濃厚與白湯感明顯，但入口仍偏細膩滑順。",
+    "axisLabels": {
+      "richness": "濃厚",
+      "broth": "白湯",
+      "impact": "溫和",
+      "noodle": "細滑"
+    },
+    "ingredientTags": [
+      "CHICKEN",
+      "DUCK",
+      "BEEF"
+    ]
+  },
+  {
+    "code": "RWLT",
+    "name": "濃白厚麵型",
+    "family": "濃白系",
+    "summary": "濃厚白湯感與厚實麵體兼具，飽滿但不一定最重口。",
+    "axisLabels": {
+      "richness": "濃厚",
+      "broth": "白湯",
+      "impact": "溫和",
+      "noodle": "粗嚼"
+    },
+    "ingredientTags": [
+      "PORK",
+      "BEEF",
+      "DUCK"
+    ]
+  },
+  {
+    "code": "RWHF",
+    "name": "濃白細膩型",
+    "family": "濃白系",
+    "summary": "白湯濃厚、重口感提高，但仍保留細膩滑順的入口。",
+    "axisLabels": {
+      "richness": "濃厚",
+      "broth": "白湯",
+      "impact": "重口",
+      "noodle": "細滑"
+    },
+    "ingredientTags": [
+      "DUCK",
+      "BEEF",
+      "CHICKEN"
+    ]
+  },
+  {
+    "code": "RWHT",
+    "name": "濃白重口型",
+    "family": "濃白系",
+    "summary": "濃厚、白湯、重口、存在感強，是最有衝擊的一派。",
+    "axisLabels": {
+      "richness": "濃厚",
+      "broth": "白湯",
+      "impact": "重口",
+      "noodle": "粗嚼"
+    },
+    "ingredientTags": [
+      "PORK",
+      "BEEF",
+      "DUCK"
+    ]
+  }
+]
