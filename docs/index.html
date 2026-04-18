@@ -4,12 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ramen-shop-finder</title>
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-    crossorigin=""
-  />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
@@ -20,6 +15,7 @@
     </div>
     <div class="meta-block">
       <span id="data-updated-at">資料載入中</span>
+      <span id="region-summary">區域資料準備中</span>
     </div>
   </header>
 
@@ -27,45 +23,16 @@
     <aside class="sidebar">
       <section class="panel">
         <h2>資料來源</h2>
-        <label>
-          地區
-          <select id="region-select"></select>
-        </label>
+        <label>地區<select id="region-select"></select></label>
       </section>
 
       <section class="panel">
         <h2>篩選</h2>
-        <label>
-          關鍵字
-          <input id="keyword-input" type="text" placeholder="店名、地址、商圈" />
-        </label>
-        <label>
-          行政區
-          <select id="district-select">
-            <option value="">全部</option>
-          </select>
-        </label>
-        <label>
-          商圈 / 地標
-          <select id="area-select">
-            <option value="">全部</option>
-          </select>
-        </label>
-        <label>
-          四字分類
-          <select id="style-select">
-            <option value="">全部</option>
-          </select>
-        </label>
-        <label>
-          最低評分
-          <select id="rating-select">
-            <option value="">不限</option>
-            <option value="4.5">4.5+</option>
-            <option value="4.0">4.0+</option>
-            <option value="3.5">3.5+</option>
-          </select>
-        </label>
+        <label>關鍵字<input id="keyword-input" type="text" placeholder="店名、地址、商圈" /></label>
+        <label>行政區<select id="district-select"><option value="">全部</option></select></label>
+        <label>商圈 / 地標<select id="area-select"><option value="">全部</option></select></label>
+        <label>四字分類<select id="style-select"><option value="">全部</option></select></label>
+        <label>最低評分<select id="rating-select"><option value="">不限</option><option value="4.5">4.5+</option><option value="4.0">4.0+</option><option value="3.5">3.5+</option></select></label>
       </section>
 
       <section class="panel">
@@ -81,15 +48,17 @@
 
     <section class="content">
       <div id="map"></div>
-      <div id="shop-list" class="shop-list"></div>
+      <div class="bottom-grid">
+        <div id="shop-list" class="shop-list"></div>
+        <aside class="detail-panel">
+          <h2>店家詳細</h2>
+          <div id="detail-content" class="detail-content">請先從列表或地圖選擇一家店。</div>
+        </aside>
+      </div>
     </section>
   </main>
 
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin=""
-  ></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="./app.js"></script>
 </body>
 </html>
