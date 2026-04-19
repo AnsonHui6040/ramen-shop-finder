@@ -6,6 +6,7 @@ const state = {
   profiles: [],
   map: null,
   markersLayer: null,
+  selectedShopId: "",
 };
 
 const els = {
@@ -19,6 +20,8 @@ const els = {
   resultCount: document.getElementById("result-count"),
   shopList: document.getElementById("shop-list"),
   dataUpdatedAt: document.getElementById("data-updated-at"),
+  regionSummary: document.getElementById("region-summary"),
+  detailContent: document.getElementById("detail-content"),
 };
 
 async function fetchJson(path) {
@@ -41,6 +44,15 @@ function initMap() {
 
 function formatNumber(value) {
   return typeof value === "number" ? value.toLocaleString("zh-Hant") : "-";
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }
 
 function fillSelect(select, values, placeholder = "全部") {
@@ -85,11 +97,11 @@ function renderStyleHelp() {
 
   const tags = (profile.ingredientTags || []).join(" / ");
   els.styleHelp.innerHTML = `
-    <strong>${profile.name}</strong><br />
-    ${profile.summary}<br /><br />
-    家族：${profile.family}<br />
-    四軸：${profile.axisLabels.richness}・${profile.axisLabels.broth}・${profile.axisLabels.impact}・${profile.axisLabels.noodle}<br />
-    食材方向：${tags}
+    <strong>${escapeHtml(profile.name)}</strong><br />
+    ${escapeHtml(profile.summary)}<br /><br />
+    家族：${escapeHtml(profile.family)}<br />
+    四軸：${escapeHtml(profile.axisLabels.richness)}・${escapeHtml(profile.axisLabels.broth)}・${escapeHtml(profile.axisLabels.impact)}・${escapeHtml(profile.axisLabels.noodle)}<br />
+    食材方向：${escapeHtml(tags)}
   `;
 }
 
@@ -119,49 +131,121 @@ function getFilteredShops() {
   });
 }
 
+function renderDetail(shop) {
+  if (!shop) {
+    els.detailContent.innerHTML = "請先從列表或地圖選擇一家店。";
+    return;
+  }
+
+  els.detailContent.innerHTML = `
+    <article class="detail-card">
+      <h3>${escapeHtml(shop.name)}</h3>
+      <div class="detail-meta">
+        <span class="tag">${escapeHtml(shop.style4char || "-")}</span>
+        <span class="tag">${escapeHtml(shop.styleCode || "-")}</span>
+        <span class="tag">⭐ ${escapeHtml(shop.rating ?? "-")}</span>
+        <span class="tag">評論 ${escapeHtml(formatNumber(shop.ratingCount))}</span>
+      </div>
+      <div class="detail-list">
+        <div class="detail-row"><strong>區域</strong><span>${escapeHtml(shop.region || "-")} ${shop.district ? `／${escapeHtml(shop.district)}` : ""}</span></div>
+        <div class="detail-row"><strong>商圈</strong><span>${escapeHtml(shop.areaTag || "未設定")}</span></div>
+        <div class="detail-row"><strong>地址</strong><span>${escapeHtml(shop.address || "未提供")}</span></div>
+        <div class="detail-row"><strong>營業時間</strong><span>${escapeHtml(shop.openHours || "未提供")}</span></div>
+        <div class="detail-row"><strong>電話</strong><span>${escapeHtml(shop.phone || "未提供")}</span></div>
+        <div class="detail-row"><strong>分類信心</strong><span>${escapeHtml(shop.styleConfidence ?? "-")}</span></div>
+        <div class="detail-row"><strong>最後驗證</strong><span>${escapeHtml(shop.lastVerified || "未提供")}</span></div>
+        <div class="detail-row"><strong>備註</strong><span>${escapeHtml(shop.notes || "未提供")}</span></div>
+      </div>
+      <div class="detail-links">
+        ${shop.mapUrl ? `<a href="${escapeHtml(shop.mapUrl)}" target="_blank" rel="noreferrer">Google Maps</a>` : ""}
+        ${shop.website ? `<a href="${escapeHtml(shop.website)}" target="_blank" rel="noreferrer">官方網站</a>` : ""}
+      </div>
+    </article>
+  `;
+}
+
+function setSelectedShop(shop, options = {}) {
+  state.selectedShopId = shop?.shopId || "";
+  renderDetail(shop || null);
+
+  if (shop && options.panToMarker !== false && typeof shop.lat === "number" && typeof shop.lng === "number") {
+    state.map.setView([shop.lat, shop.lng], Math.max(state.map.getZoom(), 15));
+  }
+}
+
+function renderRegionSummary(totalCount, filteredCount) {
+  const regionName = state.regionData?.region || state.currentRegionCode || "未選擇地區";
+  els.regionSummary.textContent = `${regionName}｜顯示 ${filteredCount} / ${totalCount} 間`;
+}
+
 function renderShops() {
+  const allShops = state.regionData?.shops || [];
   const shops = getFilteredShops();
   els.resultCount.textContent = `${shops.length} 間`;
+  renderRegionSummary(allShops.length, shops.length);
 
   els.shopList.innerHTML = "";
   state.markersLayer.clearLayers();
 
   if (!shops.length) {
+    state.selectedShopId = "";
+    renderDetail(null);
     els.shopList.innerHTML = '<div class="empty-state">沒有符合條件的店家。</div>';
     return;
   }
 
+  const selectedStillVisible = shops.some((shop) => shop.shopId === state.selectedShopId);
+  if (!selectedStillVisible) {
+    state.selectedShopId = shops[0].shopId;
+  }
+
+  const activeShop = shops.find((shop) => shop.shopId === state.selectedShopId) || shops[0];
+  renderDetail(activeShop);
+
   const bounds = [];
 
   shops.forEach((shop) => {
+    const isActive = shop.shopId === state.selectedShopId;
     const card = document.createElement("article");
-    card.className = "shop-card";
+    card.className = `shop-card${isActive ? " is-active" : ""}`;
     card.innerHTML = `
-      <h3>${shop.name}</h3>
+      <h3>${escapeHtml(shop.name)}</h3>
       <div class="shop-meta">
-        <span class="tag">${shop.style4char || "-"}</span>
-        <span class="tag">${shop.district || "-"}</span>
-        <span class="tag">${shop.areaTag || "未設定商圈"}</span>
-        <span class="tag">⭐ ${shop.rating ?? "-"}</span>
-        <span class="tag">評論 ${formatNumber(shop.ratingCount)}</span>
+        <span class="tag">${escapeHtml(shop.style4char || "-")}</span>
+        <span class="tag">${escapeHtml(shop.district || "-")}</span>
+        <span class="tag">${escapeHtml(shop.areaTag || "未設定商圈")}</span>
+        <span class="tag">⭐ ${escapeHtml(shop.rating ?? "-")}</span>
+        <span class="tag">評論 ${escapeHtml(formatNumber(shop.ratingCount))}</span>
       </div>
-      <p>${shop.address || "未提供地址"}</p>
-      <p>${shop.openHours || "未提供營業時間"}</p>
-      <p>${shop.notes || ""}</p>
+      <p>${escapeHtml(shop.address || "未提供地址")}</p>
+      <p>${escapeHtml(shop.openHours || "未提供營業時間")}</p>
+      <p>${escapeHtml(shop.notes || "")}</p>
       <div class="shop-links">
-        ${shop.mapUrl ? `<a href="${shop.mapUrl}" target="_blank" rel="noreferrer">Google Maps</a>` : ""}
-        ${shop.website ? `<a href="${shop.website}" target="_blank" rel="noreferrer">官方網站</a>` : ""}
+        ${shop.mapUrl ? `<a href="${escapeHtml(shop.mapUrl)}" target="_blank" rel="noreferrer">Google Maps</a>` : ""}
+        ${shop.website ? `<a href="${escapeHtml(shop.website)}" target="_blank" rel="noreferrer">官方網站</a>` : ""}
       </div>
     `;
+
+    card.addEventListener("click", (event) => {
+      const clickedLink = event.target.closest("a");
+      if (clickedLink) return;
+      setSelectedShop(shop);
+      renderShops();
+    });
+
     els.shopList.appendChild(card);
 
     if (typeof shop.lat === "number" && typeof shop.lng === "number") {
       const marker = L.marker([shop.lat, shop.lng]).bindPopup(`
-        <strong>${shop.name}</strong><br />
-        ${shop.style4char || "-"}<br />
-        ${shop.district || ""} ${shop.areaTag ? `・${shop.areaTag}` : ""}<br />
-        ⭐ ${shop.rating ?? "-"} / ${formatNumber(shop.ratingCount)}
+        <strong>${escapeHtml(shop.name)}</strong><br />
+        ${escapeHtml(shop.style4char || "-")}<br />
+        ${escapeHtml(shop.district || "")} ${shop.areaTag ? `・${escapeHtml(shop.areaTag)}` : ""}<br />
+        ⭐ ${escapeHtml(shop.rating ?? "-")} / ${escapeHtml(formatNumber(shop.ratingCount))}
       `);
+      marker.on("click", () => {
+        setSelectedShop(shop, { panToMarker: false });
+        renderShops();
+      });
       marker.addTo(state.markersLayer);
       bounds.push([shop.lat, shop.lng]);
     }
@@ -183,6 +267,7 @@ function refreshFilters() {
 async function loadRegion(regionCode) {
   state.currentRegionCode = regionCode;
   state.regionData = await fetchJson(`./data/${regionCode}.json`);
+  state.selectedShopId = state.regionData?.shops?.[0]?.shopId || "";
   const { defaultMap, updatedAt } = state.regionData;
 
   refreshFilters();
@@ -235,5 +320,10 @@ async function init() {
 
 init().catch((error) => {
   console.error(error);
-  els.shopList.innerHTML = `<div class="empty-state">資料載入失敗：${error.message}</div>`;
+  if (els.shopList) {
+    els.shopList.innerHTML = `<div class="empty-state">資料載入失敗：${escapeHtml(error.message)}</div>`;
+  }
+  if (els.detailContent) {
+    els.detailContent.textContent = "目前無法載入店家詳細資料。";
+  }
 });
