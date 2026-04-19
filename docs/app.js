@@ -18,12 +18,21 @@ const els = {
   styleSelect: document.getElementById("style-select"),
   ratingSelect: document.getElementById("rating-select"),
   sortCountBtn: document.getElementById("sort-count-btn"),
+  chipSearch: document.getElementById("chip-search"),
+  mRegionSelect: document.getElementById("m-region-select"),
+  mDistrictSelect: document.getElementById("m-district-select"),
+  mAreaSelect: document.getElementById("m-area-select"),
+  mStyleSelect: document.getElementById("m-style-select"),
+  chipRatingRow: document.getElementById("chip-rating-row"),
   styleHelp: document.getElementById("style-help"),
   resultCount: document.getElementById("result-count"),
   shopList: document.getElementById("shop-list"),
   dataUpdatedAt: document.getElementById("data-updated-at"),
-  regionSummary: document.getElementById("region-summary"),
   detailContent: document.getElementById("detail-content"),
+  detailPanel: document.querySelector(".detail-panel"),
+  detailHeader: document.getElementById("detail-header"),
+  detailTitle: document.getElementById("detail-title"),
+  detailChevron: document.getElementById("detail-chevron"),
 };
 
 async function fetchJson(path) {
@@ -77,7 +86,7 @@ function renderStyleOptions() {
   state.profiles.forEach((profile) => {
     const option = document.createElement("option");
     option.value = profile.code;
-    option.textContent = `${profile.name}（${profile.code}）`;
+    option.textContent = `${profile.code}｜${profile.name}`;
     els.styleSelect.appendChild(option);
   });
 
@@ -93,7 +102,7 @@ function getProfile(code) {
 function renderStyleHelp() {
   const profile = getProfile(els.styleSelect.value);
   if (!profile) {
-    els.styleHelp.textContent = "請先選擇一個四字分類。";
+    els.styleHelp.textContent = "請先選擇一個類型。";
     return;
   }
 
@@ -137,7 +146,12 @@ function getFilteredShops() {
   );
 }
 
+function isMobile() {
+  return window.innerWidth <= 960;
+}
+
 function renderDetail(shop) {
+  els.detailTitle.textContent = shop ? shop.name : "店家詳細";
   if (!shop) {
     els.detailContent.innerHTML = "請先從列表或地圖選擇一家店。";
     return;
@@ -153,8 +167,8 @@ function renderDetail(shop) {
         <span class="tag">評論 ${escapeHtml(formatNumber(shop.ratingCount))}</span>
       </div>
       <div class="detail-list">
-        <div class="detail-row"><strong>區域</strong><span>${escapeHtml(shop.region || "-")} ${shop.district ? `／${escapeHtml(shop.district)}` : ""}</span></div>
-        <div class="detail-row"><strong>商圈</strong><span>${escapeHtml(shop.areaTag || "未設定")}</span></div>
+        <div class="detail-row"><strong>市</strong><span>${escapeHtml(shop.region || "-")} ${shop.district ? `／${escapeHtml(shop.district)}` : ""}</span></div>
+        <div class="detail-row"><strong>商圈 / 路段</strong><span>${escapeHtml(shop.areaTag || "未設定")}</span></div>
         <div class="detail-row"><strong>地址</strong><span>${escapeHtml(shop.address || "未提供")}</span></div>
         <div class="detail-row"><strong>營業時間</strong><span>${escapeHtml(shop.openHours || "未提供")}</span></div>
         <div class="detail-row"><strong>電話</strong><span>${escapeHtml(shop.phone || "未提供")}</span></div>
@@ -179,10 +193,59 @@ function setSelectedShop(shop, options = {}) {
   }
 }
 
-function renderRegionSummary(totalCount, filteredCount) {
-  const regionName = state.regionData?.region || state.currentRegionCode || "未選擇地區";
-  els.regionSummary.textContent = `${regionName}｜顯示 ${filteredCount} / ${totalCount} 間`;
+function makeChip(label, active, onClick) {
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = `chip-btn${active ? " is-active" : ""}`;
+  btn.textContent = label;
+  btn.addEventListener("click", onClick);
+  return btn;
 }
+
+function renderChipFilters() {
+  if (!state.regionData) return;
+  const selRating = els.ratingSelect.value;
+
+  // Sync mobile style select
+  if (els.mStyleSelect.options.length <= 1) {
+    state.profiles.forEach((p) => {
+      const opt = document.createElement("option");
+      opt.value = p.code;
+      opt.textContent = `${p.code}｜${p.name}`;
+      els.mStyleSelect.appendChild(opt);
+    });
+  }
+  els.mStyleSelect.value = els.styleSelect.value;
+
+  // Rating + sort chips
+  els.chipRatingRow.innerHTML = "";
+  [{ label: "⭐ 4.5+", val: "4.5" }, { label: "⭐ 4.0+", val: "4.0" }, { label: "⭐ 3.5+", val: "3.5" }].forEach(({ label, val }) =>
+    els.chipRatingRow.appendChild(makeChip(label, selRating === val, () => {
+      els.ratingSelect.value = selRating === val ? "" : val;
+      renderShops(true);
+    }))
+  );
+  els.chipRatingRow.appendChild(makeChip("評論數↓", state.sortByCount, () => {
+    state.sortByCount = !state.sortByCount;
+    els.sortCountBtn.classList.toggle("is-active", state.sortByCount);
+    renderShops(true);
+  }));
+  els.chipRatingRow.appendChild(makeChip("重設", false, () => {
+    els.ratingSelect.value = "";
+    els.districtSelect.value = "";
+    els.areaSelect.value = "";
+    els.styleSelect.value = "";
+    els.keywordInput.value = "";
+    els.chipSearch.value = "";
+    state.sortByCount = false;
+    els.sortCountBtn.classList.remove("is-active");
+    refreshFilters();
+    renderStyleHelp();
+    renderShops(true);
+  }));
+}
+
+function renderRegionSummary() {}
 
 function renderShops(fitMap = false) {
   const allShops = state.regionData?.shops || [];
@@ -220,7 +283,7 @@ function renderShops(fitMap = false) {
       <div class="shop-meta">
         <span class="tag">${escapeHtml(shop.style4char || "-")}</span>
         <span class="tag">${escapeHtml(shop.district || "-")}</span>
-        <span class="tag">${escapeHtml(shop.areaTag || "未設定商圈")}</span>
+        <span class="tag">${escapeHtml(shop.areaTag || "未設定")}</span>
         <span class="tag">⭐ ${escapeHtml(shop.rating ?? "-")}</span>
         <span class="tag">評論 ${escapeHtml(formatNumber(shop.ratingCount))}</span>
       </div>
@@ -265,6 +328,8 @@ function renderShops(fitMap = false) {
   if (state.selectedShopId && markersById[state.selectedShopId]) {
     markersById[state.selectedShopId].openPopup();
   }
+
+  renderChipFilters();
 }
 
 function refreshFilters() {
@@ -279,6 +344,10 @@ function refreshFilters() {
   )].sort();
   fillSelect(els.districtSelect, districts, "全部");
   fillSelect(els.areaSelect, areas, "全部");
+  fillSelect(els.mDistrictSelect, districts, "地區");
+  fillSelect(els.mAreaSelect, areas, "商圈 / 路段");
+  els.mDistrictSelect.value = els.districtSelect.value;
+  els.mAreaSelect.value = els.areaSelect.value;
 }
 
 async function loadRegion(regionCode) {
@@ -295,7 +364,7 @@ async function loadRegion(regionCode) {
     state.map.setView([defaultMap.lat, defaultMap.lng], defaultMap.zoom || 12);
   }
 
-  els.dataUpdatedAt.textContent = `資料更新：${new Date(updatedAt).toLocaleString("zh-Hant")}`;
+  els.dataUpdatedAt.textContent = `資料更新：${new Date(updatedAt).toLocaleDateString("zh-Hant")}`;
 }
 
 async function init() {
@@ -316,14 +385,49 @@ async function init() {
     const option = document.createElement("option");
     option.value = region.regionCode;
     option.textContent = `${region.region}（${region.shopCount}）`;
+    els.mRegionSelect.appendChild(option.cloneNode(true));
     els.regionSelect.appendChild(option);
   });
 
   const defaultRegionCode = state.regions[0]?.regionCode || "taichung";
   els.regionSelect.value = defaultRegionCode;
+  els.mRegionSelect.value = defaultRegionCode;
 
-  els.regionSelect.addEventListener("change", () => loadRegion(els.regionSelect.value));
+  els.detailHeader.addEventListener("click", () => {
+    if (isMobile()) {
+      const isOpen = els.detailPanel.classList.toggle("is-open");
+      els.detailChevron.textContent = isOpen ? "縮小詳細" : "更多詳細";
+    }
+  });
+
+  els.regionSelect.addEventListener("change", () => {
+    els.mRegionSelect.value = els.regionSelect.value;
+    loadRegion(els.regionSelect.value);
+  });
+  els.mRegionSelect.addEventListener("change", () => {
+    els.regionSelect.value = els.mRegionSelect.value;
+    loadRegion(els.mRegionSelect.value);
+  });
   els.keywordInput.addEventListener("input", () => renderShops(true));
+  els.chipSearch.addEventListener("input", () => {
+    els.keywordInput.value = els.chipSearch.value;
+    renderShops(true);
+  });
+  els.mDistrictSelect.addEventListener("change", () => {
+    els.districtSelect.value = els.mDistrictSelect.value;
+    els.areaSelect.value = "";
+    refreshFilters();
+    renderShops(true);
+  });
+  els.mAreaSelect.addEventListener("change", () => {
+    els.areaSelect.value = els.mAreaSelect.value;
+    renderShops(true);
+  });
+  els.mStyleSelect.addEventListener("change", () => {
+    els.styleSelect.value = els.mStyleSelect.value;
+    renderStyleHelp();
+    renderShops(true);
+  });
   els.districtSelect.addEventListener("change", () => {
     els.areaSelect.value = "";
     refreshFilters();
