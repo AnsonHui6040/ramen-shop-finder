@@ -7,6 +7,7 @@ const state = {
   map: null,
   markersLayer: null,
   selectedShopId: "",
+  sortByCount: false,
 };
 
 const els = {
@@ -16,6 +17,7 @@ const els = {
   areaSelect: document.getElementById("area-select"),
   styleSelect: document.getElementById("style-select"),
   ratingSelect: document.getElementById("rating-select"),
+  sortCountBtn: document.getElementById("sort-count-btn"),
   styleHelp: document.getElementById("style-help"),
   resultCount: document.getElementById("result-count"),
   shopList: document.getElementById("shop-list"),
@@ -128,7 +130,11 @@ function getFilteredShops() {
     const ratingMatch = !minRating || (shop.rating || 0) >= minRating;
 
     return keywordMatch && districtMatch && areaMatch && styleMatch && ratingMatch;
-  });
+  }).sort((a, b) =>
+    state.sortByCount
+      ? (b.ratingCount ?? 0) - (a.ratingCount ?? 0)
+      : (b.rating ?? 0) - (a.rating ?? 0)
+  );
 }
 
 function renderDetail(shop) {
@@ -178,7 +184,7 @@ function renderRegionSummary(totalCount, filteredCount) {
   els.regionSummary.textContent = `${regionName}｜顯示 ${filteredCount} / ${totalCount} 間`;
 }
 
-function renderShops() {
+function renderShops(fitMap = false) {
   const allShops = state.regionData?.shops || [];
   const shops = getFilteredShops();
   els.resultCount.textContent = `${shops.length} 間`;
@@ -203,6 +209,7 @@ function renderShops() {
   renderDetail(activeShop);
 
   const bounds = [];
+  const markersById = {};
 
   shops.forEach((shop) => {
     const isActive = shop.shopId === state.selectedShopId;
@@ -247,19 +254,29 @@ function renderShops() {
         renderShops();
       });
       marker.addTo(state.markersLayer);
+      markersById[shop.shopId] = marker;
       bounds.push([shop.lat, shop.lng]);
     }
   });
 
-  if (bounds.length) {
+  if (fitMap && bounds.length) {
     state.map.fitBounds(bounds, { padding: [36, 36] });
+  }
+  if (state.selectedShopId && markersById[state.selectedShopId]) {
+    markersById[state.selectedShopId].openPopup();
   }
 }
 
 function refreshFilters() {
   const shops = state.regionData?.shops || [];
+  const selectedDistrict = els.districtSelect.value;
   const districts = [...new Set(shops.map((shop) => shop.district).filter(Boolean))].sort();
-  const areas = [...new Set(shops.map((shop) => shop.areaTag).filter(Boolean))].sort();
+  const areas = [...new Set(
+    shops
+      .filter((shop) => !selectedDistrict || shop.district === selectedDistrict)
+      .map((shop) => shop.areaTag)
+      .filter(Boolean)
+  )].sort();
   fillSelect(els.districtSelect, districts, "全部");
   fillSelect(els.areaSelect, areas, "全部");
 }
@@ -306,14 +323,23 @@ async function init() {
   els.regionSelect.value = defaultRegionCode;
 
   els.regionSelect.addEventListener("change", () => loadRegion(els.regionSelect.value));
-  els.keywordInput.addEventListener("input", renderShops);
-  els.districtSelect.addEventListener("change", renderShops);
-  els.areaSelect.addEventListener("change", renderShops);
+  els.keywordInput.addEventListener("input", () => renderShops(true));
+  els.districtSelect.addEventListener("change", () => {
+    els.areaSelect.value = "";
+    refreshFilters();
+    renderShops(true);
+  });
+  els.areaSelect.addEventListener("change", () => renderShops(true));
   els.styleSelect.addEventListener("change", () => {
     renderStyleHelp();
-    renderShops();
+    renderShops(true);
   });
-  els.ratingSelect.addEventListener("change", renderShops);
+  els.ratingSelect.addEventListener("change", () => renderShops(true));
+  els.sortCountBtn.addEventListener("click", () => {
+    state.sortByCount = !state.sortByCount;
+    els.sortCountBtn.classList.toggle("is-active", state.sortByCount);
+    renderShops(true);
+  });
 
   await loadRegion(defaultRegionCode);
 }

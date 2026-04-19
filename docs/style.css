@@ -48,13 +48,14 @@ body {
 .layout {
   display: grid;
   grid-template-columns: 320px 1fr;
-  min-height: calc(100vh - 93px);
+  height: calc(100vh - 93px);
 }
 
 .sidebar {
   padding: 16px;
   border-right: 1px solid var(--line);
   background: #fafafa;
+  overflow-y: auto;
 }
 
 .panel {
@@ -95,6 +96,8 @@ body {
 .content {
   display: grid;
   grid-template-rows: 42vh 1fr;
+  min-height: 0;
+  overflow: hidden;
 }
 
 #map {
@@ -107,6 +110,7 @@ body {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) 380px;
   min-height: 0;
+  overflow: hidden;
 }
 
 .shop-list,
@@ -203,6 +207,25 @@ body {
 .detail-links a {
   margin-right: 12px;
   color: var(--accent);
+}
+
+#sort-count-btn {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: left;
+  color: var(--subtle);
+}
+
+#sort-count-btn.is-active {
+  border-color: #6366f1;
+  background: #eef2ff;
+  color: #4338ca;
+  font-weight: 600;
 }
 
 .empty-state {

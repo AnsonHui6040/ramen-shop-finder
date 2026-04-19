@@ -1,5 +1,6 @@
 import http from "node:http";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -53,6 +54,17 @@ const server = http.createServer((req, res) => {
   send(res, 200, fileBuffer, contentType);
 });
 
-server.listen(port, "127.0.0.1", () => {
+function getLocalIp() {
+  for (const ifaces of Object.values(os.networkInterfaces())) {
+    for (const iface of ifaces) {
+      if (iface.family === "IPv4" && !iface.internal) return iface.address;
+    }
+  }
+  return null;
+}
+
+server.listen(port, "0.0.0.0", () => {
+  const localIp = getLocalIp();
   console.log(`Preview server running at http://127.0.0.1:${port}`);
+  if (localIp) console.log(`Network access:         http://${localIp}:${port}`);
 });
