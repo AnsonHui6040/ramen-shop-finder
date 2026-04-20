@@ -3,17 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ramen-shop-finder</title>
+  <title>拉麵店分類地圖</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
   <header class="topbar">
-    <div>
-      <h1>ramen-shop-finder</h1>
+    <div class="topbar-title">
+      <h1>拉麵店分類地圖</h1>
+      <span class="topbar-sub">RAMEN FINDER</span>
     </div>
     <div class="meta-block">
       <span id="data-updated-at">資料載入中</span>
+      <span class="tape">生活版</span>
     </div>
   </header>
 
@@ -21,7 +26,7 @@
     <aside class="sidebar">
       <section class="panel">
         <h2>資料來源</h2>
-        <label>市<select id="region-select"></select></label>
+        <label>縣市<select id="region-select"></select></label>
       </section>
 
       <section class="panel">
@@ -29,7 +34,7 @@
         <label>關鍵字<input id="keyword-input" type="text" placeholder="店名、地址、商圈" /></label>
         <label>地區<select id="district-select"><option value="">全部</option></select></label>
         <label>商圈 / 路段<select id="area-select"><option value="">全部</option></select></label>
-        <label>類型<select id="style-select"><option value="">全部</option></select></label>
+        <label>四字類型<select id="style-select"><option value="">全部</option></select></label>
         <label>最低評分<select id="rating-select"><option value="">不限</option><option value="4.5">4.5+</option><option value="4.0">4.0+</option><option value="3.5">3.5+</option></select></label>
         <button id="sort-count-btn" type="button">依評論數排序</button>
       </section>
