@@ -334,18 +334,34 @@ function renderShops(fitMap = false) {
 
 function refreshFilters() {
   const shops = state.regionData?.shops || [];
+  const seedDistricts = state.regionData?.districts || [];
   const selectedDistrict = els.districtSelect.value;
-  const districts = [...new Set(shops.map((shop) => shop.district).filter(Boolean))].sort();
-  const areas = [...new Set(
-    shops
-      .filter((shop) => !selectedDistrict || shop.district === selectedDistrict)
-      .map((shop) => shop.areaTag)
-      .filter(Boolean)
-  )].sort();
-  fillSelect(els.districtSelect, districts, "全部");
-  fillSelect(els.areaSelect, areas, "全部");
-  fillSelect(els.mDistrictSelect, districts, "地區");
-  fillSelect(els.mAreaSelect, areas, "商圈 / 路段");
+
+  // Merge seed districts with any districts from actual shops
+  const seedDistrictNames = seedDistricts.map((d) => d.district);
+  const shopDistrictNames = shops.map((s) => s.district).filter(Boolean);
+  const allDistricts = [...new Set([...seedDistrictNames, ...shopDistrictNames])];
+
+  // Areas: seed areas for selected district + areas from shops
+  let allAreas;
+  if (selectedDistrict) {
+    const seedEntry = seedDistricts.find((d) => d.district === selectedDistrict);
+    const seedAreas = seedEntry?.areas || [];
+    const shopAreas = shops
+      .filter((s) => s.district === selectedDistrict)
+      .map((s) => s.areaTag)
+      .filter(Boolean);
+    allAreas = [...new Set([...seedAreas, ...shopAreas])];
+  } else {
+    const allSeedAreas = seedDistricts.flatMap((d) => d.areas);
+    const allShopAreas = shops.map((s) => s.areaTag).filter(Boolean);
+    allAreas = [...new Set([...allSeedAreas, ...allShopAreas])];
+  }
+
+  fillSelect(els.districtSelect, allDistricts, "全部");
+  fillSelect(els.areaSelect, allAreas, "全部");
+  fillSelect(els.mDistrictSelect, allDistricts, "地區");
+  fillSelect(els.mAreaSelect, allAreas, "商圈 / 路段");
   els.mDistrictSelect.value = els.districtSelect.value;
   els.mAreaSelect.value = els.areaSelect.value;
 }

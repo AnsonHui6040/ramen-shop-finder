@@ -1,12 +1,41 @@
 {
   "region": "新竹市",
   "regionCode": "hsinchu-city",
-  "updatedAt": "2026-04-20T05:07:51.386Z",
+  "updatedAt": "2026-04-20T06:47:52.848Z",
   "defaultMap": {
     "lat": 24.8066,
     "lng": 120.9686,
     "zoom": 13
   },
   "shopCount": 0,
+  "districts": [
+    {
+      "district": "東區",
+      "areas": [
+        "新竹火車站",
+        "東門市場",
+        "城隍廟商圈",
+        "經國路"
+      ]
+    },
+    {
+      "district": "北區",
+      "areas": [
+        "科學園區周邊",
+        "竹蓮市場",
+        "西大路",
+        "北門街"
+      ]
+    },
+    {
+      "district": "香山區",
+      "areas": [
+        "南寮漁港",
+        "香山濕地",
+        "中華路",
+        "牛埔路"
+      ]
+    }
+  ],
   "shops": []
 }

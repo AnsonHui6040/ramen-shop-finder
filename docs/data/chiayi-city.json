@@ -1,12 +1,32 @@
 {
   "region": "嘉義市",
   "regionCode": "chiayi-city",
-  "updatedAt": "2026-04-20T05:07:51.419Z",
+  "updatedAt": "2026-04-20T06:47:52.903Z",
   "defaultMap": {
     "lat": 23.4801,
     "lng": 120.4491,
     "zoom": 13
   },
   "shopCount": 0,
+  "districts": [
+    {
+      "district": "東區",
+      "areas": [
+        "嘉義火車站周邊",
+        "文化路夜市",
+        "中山路",
+        "嘉義公園"
+      ]
+    },
+    {
+      "district": "西區",
+      "areas": [
+        "國華街",
+        "嘉義舊監",
+        "西區文創園區",
+        "中正路"
+      ]
+    }
+  ],
   "shops": []
 }

@@ -83,6 +83,21 @@ function buildRegion(filePath, profilesMap) {
     (shop) => shop.shopId && shop.name && shop.lat !== null && shop.lng !== null,
   );
 
+  // Build district→areas map from seed sheet
+  const seedRows = readSheet(workbook, "district_area_seed");
+  const districtMap = new Map();
+  for (const row of seedRows) {
+    const district = normalizeText(row.district);
+    const area = normalizeText(row.area_tag);
+    if (!district) continue;
+    if (!districtMap.has(district)) districtMap.set(district, []);
+    if (area) districtMap.get(district).push(area);
+  }
+  const districts = Array.from(districtMap.entries()).map(([district, areas]) => ({
+    district,
+    areas,
+  }));
+
   return {
     region: normalizeText(meta.region_name) || normalizeText(shops[0]?.region) || regionCode,
     regionCode,
@@ -93,6 +108,7 @@ function buildRegion(filePath, profilesMap) {
       zoom: toNumber(meta.default_zoom) || 12,
     },
     shopCount: shops.length,
+    districts,
     shops,
   };
 }
