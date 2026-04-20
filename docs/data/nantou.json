@@ -1,0 +1,12 @@
+{
+  "region": "南投縣",
+  "regionCode": "nantou",
+  "updatedAt": "2026-04-20T05:07:27.597Z",
+  "defaultMap": {
+    "lat": 23.961,
+    "lng": 120.9718,
+    "zoom": 12
+  },
+  "shopCount": 0,
+  "shops": []
+}

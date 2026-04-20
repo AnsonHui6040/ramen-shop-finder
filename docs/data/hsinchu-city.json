@@ -1,0 +1,12 @@
+{
+  "region": "新竹市",
+  "regionCode": "hsinchu-city",
+  "updatedAt": "2026-04-20T05:07:27.570Z",
+  "defaultMap": {
+    "lat": 24.8066,
+    "lng": 120.9686,
+    "zoom": 13
+  },
+  "shopCount": 0,
+  "shops": []
+}

@@ -1,0 +1,12 @@
+{
+  "region": "高雄市",
+  "regionCode": "kaohsiung",
+  "updatedAt": "2026-04-20T05:07:27.556Z",
+  "defaultMap": {
+    "lat": 22.6273,
+    "lng": 120.3014,
+    "zoom": 12
+  },
+  "shopCount": 0,
+  "shops": []
+}

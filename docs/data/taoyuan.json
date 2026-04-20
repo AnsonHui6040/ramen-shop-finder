@@ -1,0 +1,12 @@
+{
+  "region": "桃園市",
+  "regionCode": "taoyuan",
+  "updatedAt": "2026-04-20T05:07:27.516Z",
+  "defaultMap": {
+    "lat": 24.9936,
+    "lng": 121.301,
+    "zoom": 12
+  },
+  "shopCount": 0,
+  "shops": []
+}

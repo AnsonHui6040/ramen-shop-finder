@@ -1,0 +1,12 @@
+{
+  "region": "基隆市",
+  "regionCode": "keelung",
+  "updatedAt": "2026-04-20T05:07:27.564Z",
+  "defaultMap": {
+    "lat": 25.1276,
+    "lng": 121.7392,
+    "zoom": 13
+  },
+  "shopCount": 0,
+  "shops": []
+}

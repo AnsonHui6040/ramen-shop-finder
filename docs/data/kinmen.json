@@ -1,0 +1,12 @@
+{
+  "region": "金門縣",
+  "regionCode": "kinmen",
+  "updatedAt": "2026-04-20T05:07:27.646Z",
+  "defaultMap": {
+    "lat": 24.4493,
+    "lng": 118.3767,
+    "zoom": 13
+  },
+  "shopCount": 0,
+  "shops": []
+}

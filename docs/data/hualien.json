@@ -1,0 +1,12 @@
+{
+  "region": "花蓮縣",
+  "regionCode": "hualien",
+  "updatedAt": "2026-04-20T05:07:27.630Z",
+  "defaultMap": {
+    "lat": 23.9772,
+    "lng": 121.6044,
+    "zoom": 12
+  },
+  "shopCount": 0,
+  "shops": []
+}

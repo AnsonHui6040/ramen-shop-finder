@@ -356,6 +356,7 @@ async function loadRegion(regionCode) {
   state.selectedShopId = state.regionData?.shops?.[0]?.shopId || "";
   const { defaultMap, updatedAt } = state.regionData;
 
+  setFiltersEnabled(true);
   refreshFilters();
   renderStyleHelp();
   renderShops();
@@ -365,6 +366,18 @@ async function loadRegion(regionCode) {
   }
 
   els.dataUpdatedAt.textContent = `資料更新：${new Date(updatedAt).toLocaleDateString("zh-Hant")}`;
+}
+
+function setFiltersEnabled(enabled) {
+  const targets = [
+    els.keywordInput, els.districtSelect, els.areaSelect, els.styleSelect,
+    els.ratingSelect, els.sortCountBtn, els.chipSearch,
+    els.mDistrictSelect, els.mAreaSelect, els.mStyleSelect,
+  ];
+  targets.forEach((el) => { el.disabled = !enabled; });
+  els.chipRatingRow.querySelectorAll("button").forEach((btn) => { btn.disabled = !enabled; });
+  document.querySelector(".chip-filter-bar")?.classList.toggle("filters-locked", !enabled);
+  document.querySelector(".sidebar .panel:nth-child(2)")?.classList.toggle("filters-locked", !enabled);
 }
 
 async function init() {
@@ -381,17 +394,28 @@ async function init() {
 
   renderStyleOptions();
 
+  const placeholder = document.createElement("option");
+  placeholder.value = "";
+  placeholder.textContent = "請選擇市";
+  els.regionSelect.appendChild(placeholder);
+  els.mRegionSelect.appendChild(placeholder.cloneNode(true));
+
   state.regions.forEach((region) => {
     const option = document.createElement("option");
     option.value = region.regionCode;
-    option.textContent = `${region.region}（${region.shopCount}）`;
+    option.textContent = region.shopCount > 0
+      ? `${region.region}（${region.shopCount}）`
+      : region.region;
     els.mRegionSelect.appendChild(option.cloneNode(true));
     els.regionSelect.appendChild(option);
   });
 
-  const defaultRegionCode = state.regions[0]?.regionCode || "taichung";
-  els.regionSelect.value = defaultRegionCode;
-  els.mRegionSelect.value = defaultRegionCode;
+  els.regionSelect.value = "";
+  els.mRegionSelect.value = "";
+  setFiltersEnabled(false);
+
+  els.shopList.innerHTML = '<div class="empty-state">請先選擇市。</div>';
+  els.detailContent.textContent = "請先選擇市後，再從列表或地圖選擇一家店。";
 
   els.detailHeader.addEventListener("click", () => {
     if (isMobile()) {
@@ -400,13 +424,25 @@ async function init() {
     }
   });
 
+  function onRegionChange(code) {
+    if (!code) {
+      setFiltersEnabled(false);
+      state.regionData = null;
+      state.selectedShopId = "";
+      els.shopList.innerHTML = '<div class="empty-state">請先選擇市。</div>';
+      renderDetail(null);
+      return;
+    }
+    loadRegion(code);
+  }
+
   els.regionSelect.addEventListener("change", () => {
     els.mRegionSelect.value = els.regionSelect.value;
-    loadRegion(els.regionSelect.value);
+    onRegionChange(els.regionSelect.value);
   });
   els.mRegionSelect.addEventListener("change", () => {
     els.regionSelect.value = els.mRegionSelect.value;
-    loadRegion(els.mRegionSelect.value);
+    onRegionChange(els.mRegionSelect.value);
   });
   els.keywordInput.addEventListener("input", () => renderShops(true));
   els.chipSearch.addEventListener("input", () => {
@@ -444,8 +480,6 @@ async function init() {
     els.sortCountBtn.classList.toggle("is-active", state.sortByCount);
     renderShops(true);
   });
-
-  await loadRegion(defaultRegionCode);
 }
 
 init().catch((error) => {

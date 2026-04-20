@@ -1,0 +1,12 @@
+{
+  "region": "新竹縣",
+  "regionCode": "hsinchu",
+  "updatedAt": "2026-04-20T05:07:27.577Z",
+  "defaultMap": {
+    "lat": 24.6682,
+    "lng": 121.1553,
+    "zoom": 12
+  },
+  "shopCount": 0,
+  "shops": []
+}

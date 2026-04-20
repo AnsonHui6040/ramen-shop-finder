@@ -1,9 +1,42 @@
 {
-  "updatedAt": "2026-04-20T01:46:45.423Z",
-  "regionCount": 1,
+  "updatedAt": "2026-04-20T05:07:51.452Z",
+  "regionCount": 22,
   "regions": [
     {
-      "region": "台中",
+      "region": "台北市",
+      "regionCode": "taipei",
+      "shopCount": 0,
+      "defaultMap": {
+        "lat": 25.033,
+        "lng": 121.5654,
+        "zoom": 13
+      },
+      "dataPath": "./data/taipei.json"
+    },
+    {
+      "region": "新北市",
+      "regionCode": "new-taipei",
+      "shopCount": 0,
+      "defaultMap": {
+        "lat": 25.0118,
+        "lng": 121.4657,
+        "zoom": 12
+      },
+      "dataPath": "./data/new-taipei.json"
+    },
+    {
+      "region": "桃園市",
+      "regionCode": "taoyuan",
+      "shopCount": 0,
+      "defaultMap": {
+        "lat": 24.9936,
+        "lng": 121.301,
+        "zoom": 12
+      },
+      "dataPath": "./data/taoyuan.json"
+    },
+    {
+      "region": "台中市",
       "regionCode": "taichung",
       "shopCount": 31,
       "defaultMap": {
@@ -12,6 +45,204 @@
         "zoom": 12
       },
       "dataPath": "./data/taichung.json"
+    },
+    {
+      "region": "台南市",
+      "regionCode": "tainan",
+      "shopCount": 0,
+      "defaultMap": {
+        "lat": 22.9999,
+        "lng": 120.227,
+        "zoom": 12
+      },
+      "dataPath": "./data/tainan.json"
+    },
+    {
+      "region": "高雄市",
+      "regionCode": "kaohsiung",
+      "shopCount": 0,
+      "defaultMap": {
+        "lat": 22.6273,
+        "lng": 120.3014,
+        "zoom": 12
+      },
+      "dataPath": "./data/kaohsiung.json"
+    },
+    {
+      "region": "基隆市",
+      "regionCode": "keelung",
+      "shopCount": 0,
+      "defaultMap": {
+        "lat": 25.1276,
+        "lng": 121.7392,
+        "zoom": 13
+      },
+      "dataPath": "./data/keelung.json"
+    },
+    {
+      "region": "新竹市",
+      "regionCode": "hsinchu-city",
+      "shopCount": 0,
+      "defaultMap": {
+        "lat": 24.8066,
+        "lng": 120.9686,
+        "zoom": 13
+      },
+      "dataPath": "./data/hsinchu-city.json"
+    },
+    {
+      "region": "新竹縣",
+      "regionCode": "hsinchu",
+      "shopCount": 0,
+      "defaultMap": {
+        "lat": 24.6682,
+        "lng": 121.1553,
+        "zoom": 12
+      },
+      "dataPath": "./data/hsinchu.json"
+    },
+    {
+      "region": "苗栗縣",
+      "regionCode": "miaoli",
+      "shopCount": 0,
+      "defaultMap": {
+        "lat": 24.5602,
+        "lng": 120.8214,
+        "zoom": 12
+      },
+      "dataPath": "./data/miaoli.json"
+    },
+    {
+      "region": "彰化縣",
+      "regionCode": "changhua",
+      "shopCount": 0,
+      "defaultMap": {
+        "lat": 24.0518,
+        "lng": 120.5161,
+        "zoom": 12
+      },
+      "dataPath": "./data/changhua.json"
+    },
+    {
+      "region": "南投縣",
+      "regionCode": "nantou",
+      "shopCount": 0,
+      "defaultMap": {
+        "lat": 23.961,
+        "lng": 120.9718,
+        "zoom": 12
+      },
+      "dataPath": "./data/nantou.json"
+    },
+    {
+      "region": "雲林縣",
+      "regionCode": "yunlin",
+      "shopCount": 0,
+      "defaultMap": {
+        "lat": 23.7092,
+        "lng": 120.4313,
+        "zoom": 12
+      },
+      "dataPath": "./data/yunlin.json"
+    },
+    {
+      "region": "嘉義市",
+      "regionCode": "chiayi-city",
+      "shopCount": 0,
+      "defaultMap": {
+        "lat": 23.4801,
+        "lng": 120.4491,
+        "zoom": 13
+      },
+      "dataPath": "./data/chiayi-city.json"
+    },
+    {
+      "region": "嘉義縣",
+      "regionCode": "chiayi",
+      "shopCount": 0,
+      "defaultMap": {
+        "lat": 23.4518,
+        "lng": 120.2554,
+        "zoom": 12
+      },
+      "dataPath": "./data/chiayi.json"
+    },
+    {
+      "region": "屏東縣",
+      "regionCode": "pingtung",
+      "shopCount": 0,
+      "defaultMap": {
+        "lat": 22.676,
+        "lng": 120.4902,
+        "zoom": 12
+      },
+      "dataPath": "./data/pingtung.json"
+    },
+    {
+      "region": "宜蘭縣",
+      "regionCode": "yilan",
+      "shopCount": 0,
+      "defaultMap": {
+        "lat": 24.7021,
+        "lng": 121.7377,
+        "zoom": 12
+      },
+      "dataPath": "./data/yilan.json"
+    },
+    {
+      "region": "花蓮縣",
+      "regionCode": "hualien",
+      "shopCount": 0,
+      "defaultMap": {
+        "lat": 23.9772,
+        "lng": 121.6044,
+        "zoom": 12
+      },
+      "dataPath": "./data/hualien.json"
+    },
+    {
+      "region": "台東縣",
+      "regionCode": "taitung",
+      "shopCount": 0,
+      "defaultMap": {
+        "lat": 22.7583,
+        "lng": 121.1444,
+        "zoom": 12
+      },
+      "dataPath": "./data/taitung.json"
+    },
+    {
+      "region": "澎湖縣",
+      "regionCode": "penghu",
+      "shopCount": 0,
+      "defaultMap": {
+        "lat": 23.5711,
+        "lng": 119.5793,
+        "zoom": 13
+      },
+      "dataPath": "./data/penghu.json"
+    },
+    {
+      "region": "金門縣",
+      "regionCode": "kinmen",
+      "shopCount": 0,
+      "defaultMap": {
+        "lat": 24.4493,
+        "lng": 118.3767,
+        "zoom": 13
+      },
+      "dataPath": "./data/kinmen.json"
+    },
+    {
+      "region": "連江縣",
+      "regionCode": "lienchiang",
+      "shopCount": 0,
+      "defaultMap": {
+        "lat": 26.1505,
+        "lng": 119.949,
+        "zoom": 13
+      },
+      "dataPath": "./data/lienchiang.json"
     }
   ]
 }

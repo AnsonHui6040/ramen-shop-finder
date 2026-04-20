@@ -1,0 +1,12 @@
+{
+  "region": "苗栗縣",
+  "regionCode": "miaoli",
+  "updatedAt": "2026-04-20T05:07:27.584Z",
+  "defaultMap": {
+    "lat": 24.5602,
+    "lng": 120.8214,
+    "zoom": 12
+  },
+  "shopCount": 0,
+  "shops": []
+}

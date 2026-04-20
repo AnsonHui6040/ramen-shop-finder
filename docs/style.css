@@ -277,6 +277,18 @@ body {
   font-weight: 600;
 }
 
+.filters-locked select,
+.filters-locked input,
+.filters-locked button {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.chip-filter-bar.filters-locked .chip-section:not(:first-child) {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
 .chip-search {
   width: 100%;
   padding: 7px 12px;

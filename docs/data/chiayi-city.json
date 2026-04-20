@@ -1,0 +1,12 @@
+{
+  "region": "嘉義市",
+  "regionCode": "chiayi-city",
+  "updatedAt": "2026-04-20T05:07:27.609Z",
+  "defaultMap": {
+    "lat": 23.4801,
+    "lng": 120.4491,
+    "zoom": 13
+  },
+  "shopCount": 0,
+  "shops": []
+}

@@ -1,0 +1,12 @@
+{
+  "region": "台南市",
+  "regionCode": "tainan",
+  "updatedAt": "2026-04-20T05:07:27.549Z",
+  "defaultMap": {
+    "lat": 22.9999,
+    "lng": 120.227,
+    "zoom": 12
+  },
+  "shopCount": 0,
+  "shops": []
+}
