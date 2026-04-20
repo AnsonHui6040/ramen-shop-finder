@@ -161,20 +161,20 @@ function renderDetail(shop) {
     <article class="detail-card">
       <h3>${escapeHtml(shop.name)}</h3>
       <div class="detail-meta">
-        <span class="tag">${escapeHtml(shop.style4char || "-")}</span>
-        <span class="tag">${escapeHtml(shop.styleCode || "-")}</span>
-        <span class="tag">⭐ ${escapeHtml(shop.rating ?? "-")}</span>
-        <span class="tag">評論 ${escapeHtml(formatNumber(shop.ratingCount))}</span>
+        <span class="stamp-rect">${escapeHtml(shop.styleCode || "-")}</span>
+        <span class="tag"><span class="tag-hole"></span>${escapeHtml(shop.style4char || "-")}</span>
+        <span class="tag"><span class="tag-hole"></span>★ ${escapeHtml(shop.rating ?? "-")}</span>
+        <span class="tag"><span class="tag-hole"></span>${escapeHtml(formatNumber(shop.ratingCount))} 則評論</span>
       </div>
       <div class="detail-list">
-        <div class="detail-row"><strong>市</strong><span>${escapeHtml(shop.region || "-")} ${shop.district ? `／${escapeHtml(shop.district)}` : ""}</span></div>
-        <div class="detail-row"><strong>商圈 / 路段</strong><span>${escapeHtml(shop.areaTag || "未設定")}</span></div>
+        <div class="detail-row"><strong>縣市</strong><span>${escapeHtml(shop.region || "-")}${shop.district ? `／${escapeHtml(shop.district)}` : ""}</span></div>
+        <div class="detail-row"><strong>商圈</strong><span>${escapeHtml(shop.areaTag || "未設定")}</span></div>
         <div class="detail-row"><strong>地址</strong><span>${escapeHtml(shop.address || "未提供")}</span></div>
-        <div class="detail-row"><strong>營業時間</strong><span>${escapeHtml(shop.openHours || "未提供")}</span></div>
+        <div class="detail-row"><strong>營業</strong><span>${escapeHtml(shop.openHours || "未提供")}</span></div>
         <div class="detail-row"><strong>電話</strong><span>${escapeHtml(shop.phone || "未提供")}</span></div>
-        <div class="detail-row"><strong>分類信心</strong><span>${escapeHtml(shop.styleConfidence ?? "-")}</span></div>
-        <div class="detail-row"><strong>最後驗證</strong><span>${escapeHtml(shop.lastVerified || "未提供")}</span></div>
-        <div class="detail-row"><strong>備註</strong><span>${escapeHtml(shop.notes || "未提供")}</span></div>
+        <div class="detail-row"><strong>信心</strong><span>${escapeHtml(shop.styleConfidence ?? "-")}</span></div>
+        <div class="detail-row"><strong>更新</strong><span>${escapeHtml(shop.lastVerified || "未提供")}</span></div>
+        ${shop.notes ? `<div class="detail-row"><strong>備註</strong><span>${escapeHtml(shop.notes)}</span></div>` : ""}
       </div>
       <div class="detail-links">
         ${shop.mapUrl ? `<a href="${escapeHtml(shop.mapUrl)}" target="_blank" rel="noreferrer">Google Maps</a>` : ""}
@@ -281,15 +281,15 @@ function renderShops(fitMap = false) {
     card.innerHTML = `
       <h3>${escapeHtml(shop.name)}</h3>
       <div class="shop-meta">
-        <span class="tag">${escapeHtml(shop.style4char || "-")}</span>
-        <span class="tag">${escapeHtml(shop.district || "-")}</span>
-        <span class="tag">${escapeHtml(shop.areaTag || "未設定")}</span>
-        <span class="tag">⭐ ${escapeHtml(shop.rating ?? "-")}</span>
-        <span class="tag">評論 ${escapeHtml(formatNumber(shop.ratingCount))}</span>
+        <span class="stamp-rect">${escapeHtml(shop.styleCode || "-")}</span>
+        <span class="tag"><span class="tag-hole"></span>${escapeHtml(shop.style4char || "-")}</span>
+        <span class="tag"><span class="tag-hole"></span>${escapeHtml(shop.district || "-")}</span>
+        ${shop.areaTag ? `<span class="tag"><span class="tag-hole"></span>${escapeHtml(shop.areaTag)}</span>` : ""}
       </div>
+      <p>★ ${escapeHtml(shop.rating ?? "-")}　評論 ${escapeHtml(formatNumber(shop.ratingCount))}</p>
       <p>${escapeHtml(shop.address || "未提供地址")}</p>
-      <p>${escapeHtml(shop.openHours || "未提供營業時間")}</p>
-      <p>${escapeHtml(shop.notes || "")}</p>
+      ${shop.openHours ? `<p>${escapeHtml(shop.openHours)}</p>` : ""}
+      ${shop.notes ? `<p>${escapeHtml(shop.notes)}</p>` : ""}
       <div class="shop-links">
         ${shop.mapUrl ? `<a href="${escapeHtml(shop.mapUrl)}" target="_blank" rel="noreferrer">Google Maps</a>` : ""}
         ${shop.website ? `<a href="${escapeHtml(shop.website)}" target="_blank" rel="noreferrer">官方網站</a>` : ""}
@@ -306,7 +306,14 @@ function renderShops(fitMap = false) {
     els.shopList.appendChild(card);
 
     if (typeof shop.lat === "number" && typeof shop.lng === "number") {
-      const marker = L.marker([shop.lat, shop.lng]).bindPopup(`
+      const icon = L.divIcon({
+        className: "",
+        html: `<div style="width:12px;height:12px;border-radius:50%;background:oklch(0.52 0.14 35);border:2px solid oklch(0.94 0.015 80);box-shadow:0 1px 3px rgba(0,0,0,.35);"></div>`,
+        iconSize: [12, 12],
+        iconAnchor: [6, 6],
+        popupAnchor: [0, -8],
+      });
+      const marker = L.marker([shop.lat, shop.lng], { icon }).bindPopup(`
         <strong>${escapeHtml(shop.name)}</strong><br />
         ${escapeHtml(shop.style4char || "-")}<br />
         ${escapeHtml(shop.district || "")} ${shop.areaTag ? `・${escapeHtml(shop.areaTag)}` : ""}<br />
