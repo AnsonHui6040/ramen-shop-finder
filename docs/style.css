@@ -277,16 +277,16 @@ body {
   font-weight: 600;
 }
 
-.filters-locked select,
-.filters-locked input,
-.filters-locked button {
+.filters-locked select:disabled,
+.filters-locked input:disabled,
+.filters-locked button:disabled {
   opacity: 0.4;
-  pointer-events: none;
 }
 
-.chip-filter-bar.filters-locked .chip-section:not(:first-child) {
+.chip-filter-bar select:disabled,
+.chip-filter-bar input:disabled,
+.chip-filter-bar button:disabled {
   opacity: 0.4;
-  pointer-events: none;
 }
 
 .chip-search {

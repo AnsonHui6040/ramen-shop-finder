@@ -376,7 +376,6 @@ function setFiltersEnabled(enabled) {
   ];
   targets.forEach((el) => { el.disabled = !enabled; });
   els.chipRatingRow.querySelectorAll("button").forEach((btn) => { btn.disabled = !enabled; });
-  document.querySelector(".chip-filter-bar")?.classList.toggle("filters-locked", !enabled);
   document.querySelector(".sidebar .panel:nth-child(2)")?.classList.toggle("filters-locked", !enabled);
 }
 
