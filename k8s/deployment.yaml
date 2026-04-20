@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ramen-shop-finder
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ramen-shop-finder
+  template:
+    metadata:
+      labels:
+        app: ramen-shop-finder
+    spec:
+      containers:
+        - name: ramen-shop-finder
+          image: ghcr.io/ansonhui6040/ramen-shop-finder:latest
+          ports:
+            - containerPort: 80
