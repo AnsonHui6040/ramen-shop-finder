@@ -10,6 +10,11 @@
 - GitHub Actions 會在 Excel 更新後自動轉成 `docs/data/*.json`
 - 前端為靜態頁面，可直接部署到 GitHub Pages
 
+## 實作網頁
+
+[線上體驗](https://gmtsskbsugqo.ap-northeast-1.clawcloudrun.com/)
+
+
 ## 專案結構
 
 ```text
