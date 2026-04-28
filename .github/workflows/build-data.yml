@@ -3,8 +3,11 @@ name: Build ramen data
 on:
   push:
     paths:
+      - "package.json"
       - "data/excel/**.xlsx"
-      - "scripts/build-data.mjs"
+      - "scripts/**.mjs"
+      - "docs/index.html"
+      - "docs/*.js"
       - "data/style/type-profiles.json"
       - ".github/workflows/build-data.yml"
   workflow_dispatch:
