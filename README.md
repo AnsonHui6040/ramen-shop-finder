@@ -103,6 +103,12 @@ npm install
 npm run build:data
 ```
 
+執行語法檢查：
+
+```bash
+npm run check
+```
+
 啟動本機預覽：
 
 ```bash
@@ -123,11 +129,33 @@ http://127.0.0.1:5173
 
 - `data/excel/*.xlsx`
 - `scripts/build-data.mjs`
+- `data/style/type-profiles.json`
 
 產出檔案：
 
 - `docs/data/<region>.json`
 - `docs/data/meta.json`
+
+Workflow 目前會先安裝依賴、執行 `npm run check`，再重建 JSON。為降低供應鏈風險，CI 安裝依賴時會使用 `--ignore-scripts`，避免第三方套件在安裝階段執行任意 lifecycle script。
+
+## 安全性與維護備註
+
+本專案資料來源以 GitHub 內的 Excel 檔為準。由於 Excel 內容會被轉成前端可讀取的 JSON，資料更新時應注意以下原則：
+
+- 只把已人工確認的資料設為 `status = published`。
+- `website` 與 `map_url` 只接受 `http` / `https` 連結；其他協定會在建置或前端顯示時被忽略。
+- `rating`、`style_confidence`、`lat`、`lng`、`default_zoom` 會在建置時做範圍檢查，異常值不會直接輸出成有效地圖點。
+- 前端文字內容會進行 HTML escaping，以降低由 Excel 文案導致的 XSS 風險。
+- 靜態頁已加入 Content Security Policy、Referrer Policy，並為 Leaflet CDN 資源加上 SRI。
+- 本機預覽伺服器只綁定 `127.0.0.1`，並已加入路徑穿越檢查與基本安全標頭。
+
+### `xlsx` 套件說明
+
+目前專案使用 `xlsx@^0.18.5` 讀取 Excel。若安全掃描工具提示 `xlsx` 相關漏洞，需注意 npm registry 目前未必有可直接升級修補的官方版本。現階段處理策略是：
+
+1. 僅處理專案作者或可信來源提交的 Excel。
+2. 在建置流程中清理文字、限制 URL 協定與檢查數值範圍。
+3. 後續如出現可修補版本，或決定改用其他維護狀態更明確的 Excel 解析套件，再進行套件替換。
 
 ## 備註
 
