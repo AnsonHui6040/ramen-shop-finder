@@ -1,15 +1,7 @@
 {
   "region": "嘉義市",
   "regionCode": "chiayi-city",
-<<<<<<< HEAD
-<<<<<<< HEAD
-  "updatedAt": "2026-05-12T22:34:22.406Z",
-=======
-  "updatedAt": "2026-05-12T22:14:51.355Z",
->>>>>>> 5e9a2324d031a06e62f97dda2ef4eb062cbf5074
-=======
-  "updatedAt": "2026-05-12T23:29:04.047Z",
->>>>>>> 6168c637c368bc95fa8a46b719e0687312b3de25
+  "updatedAt": "2026-05-12T23:41:24.477Z",
   "defaultMap": {
     "lat": 23.4801,
     "lng": 120.4491,
