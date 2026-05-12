@@ -648,3 +648,14 @@ body {
     padding: 1px 5px;
   }
 }
+
+/* ── Privacy notice footer ─────────────────────────────────────── */
+.privacy-notice {
+  padding: 12px 24px;
+  font-size: 11px;
+  color: oklch(0.55 0.01 80);
+  text-align: center;
+  border-top: 1px solid oklch(0.88 0.01 80);
+  background: oklch(0.97 0.005 80);
+  line-height: 1.6;
+}

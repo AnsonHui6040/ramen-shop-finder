@@ -182,6 +182,19 @@ function renderDetail(shop) {
       </div>
     </article>
   `;
+
+  // 追蹤詳情面板中的地圖連結點擊（fire-and-forget，不阻擋開啟）
+  if (window.ramenTracking) {
+    els.detailContent.querySelectorAll(".detail-links a[href]").forEach((link) => {
+      link.addEventListener("click", () => {
+        window.ramenTracking.trackMapClick(
+          { ...shop, region: state.currentRegionCode },
+          "google_maps",
+          link.getAttribute("href") || ""
+        );
+      });
+    });
+  }
 }
 
 function setSelectedShop(shop, options = {}) {
@@ -298,7 +311,23 @@ function renderShops(fitMap = false) {
 
     card.addEventListener("click", (event) => {
       const clickedLink = event.target.closest("a");
-      if (clickedLink) return;
+      if (clickedLink) {
+        // map_click: fire-and-forget，不阻擋連結開啟
+        if (window.ramenTracking) {
+          window.ramenTracking.trackMapClick(
+            { ...shop, region: state.currentRegionCode },
+            "google_maps",
+            clickedLink.getAttribute("href") || ""
+          );
+        }
+        return;
+      }
+      if (window.ramenTracking) {
+        window.ramenTracking.trackShopClick(
+          { ...shop, region: state.currentRegionCode },
+          "card"
+        );
+      }
       setSelectedShop(shop);
       renderShops();
     });
@@ -320,6 +349,12 @@ function renderShops(fitMap = false) {
         ⭐ ${escapeHtml(shop.rating ?? "-")} / ${escapeHtml(formatNumber(shop.ratingCount))}
       `);
       marker.on("click", () => {
+        if (window.ramenTracking) {
+          window.ramenTracking.trackShopClick(
+            { ...shop, region: state.currentRegionCode },
+            "card"
+          );
+        }
         setSelectedShop(shop, { panToMarker: false });
         renderShops();
       });
@@ -443,6 +478,17 @@ async function init() {
     if (isMobile()) {
       const isOpen = els.detailPanel.classList.toggle("is-open");
       els.detailChevron.textContent = isOpen ? "縮小詳細" : "更多詳細";
+      if (isOpen && window.ramenTracking && state.selectedShopId) {
+        const activeShop = state.regionData?.shops?.find(
+          (s) => s.shopId === state.selectedShopId
+        );
+        if (activeShop) {
+          window.ramenTracking.trackShopClick(
+            { ...activeShop, region: state.currentRegionCode },
+            "detail"
+          );
+        }
+      }
     }
   });
 

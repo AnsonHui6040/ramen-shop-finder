@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.tile.openstreetmap.org; connect-src 'self'; upgrade-insecure-requests" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.tile.openstreetmap.org; connect-src 'self' https://wmq452wmcd.execute-api.ap-east-2.amazonaws.com; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>拉麵店分類地圖</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -80,6 +80,12 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="./security.js"></script>
+  <script src="./config.js"></script>
+  <script src="./tracking.js"></script>
   <script src="./app.js"></script>
+
+  <footer class="privacy-notice">
+    本平台會收集匿名化使用資料，例如店家點擊與地圖導流，用於改善推薦品質與分析整體導流成效。本平台不收集姓名、電話、Email 等可直接識別個人的資料。
+  </footer>
 </body>
 </html>
