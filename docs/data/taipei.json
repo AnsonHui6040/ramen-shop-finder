@@ -1,7 +1,11 @@
 {
   "region": "台北市",
   "regionCode": "taipei",
+<<<<<<< HEAD
   "updatedAt": "2026-05-12T22:34:22.301Z",
+=======
+  "updatedAt": "2026-05-12T22:14:51.245Z",
+>>>>>>> 5e9a2324d031a06e62f97dda2ef4eb062cbf5074
   "defaultMap": {
     "lat": 25.033,
     "lng": 121.5654,

@@ -1,7 +1,11 @@
 {
   "region": "苗栗縣",
   "regionCode": "miaoli",
+<<<<<<< HEAD
   "updatedAt": "2026-05-12T22:34:22.381Z",
+=======
+  "updatedAt": "2026-05-12T22:14:51.328Z",
+>>>>>>> 5e9a2324d031a06e62f97dda2ef4eb062cbf5074
   "defaultMap": {
     "lat": 24.5602,
     "lng": 120.8214,

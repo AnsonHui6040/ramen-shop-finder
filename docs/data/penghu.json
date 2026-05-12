@@ -1,7 +1,11 @@
 {
   "region": "澎湖縣",
   "regionCode": "penghu",
+<<<<<<< HEAD
   "updatedAt": "2026-05-12T22:34:22.451Z",
+=======
+  "updatedAt": "2026-05-12T22:14:51.384Z",
+>>>>>>> 5e9a2324d031a06e62f97dda2ef4eb062cbf5074
   "defaultMap": {
     "lat": 23.5711,
     "lng": 119.5793,

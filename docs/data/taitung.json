@@ -1,7 +1,11 @@
 {
   "region": "台東縣",
   "regionCode": "taitung",
+<<<<<<< HEAD
   "updatedAt": "2026-05-12T22:34:22.440Z",
+=======
+  "updatedAt": "2026-05-12T22:14:51.379Z",
+>>>>>>> 5e9a2324d031a06e62f97dda2ef4eb062cbf5074
   "defaultMap": {
     "lat": 22.7583,
     "lng": 121.1444,

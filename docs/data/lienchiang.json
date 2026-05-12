@@ -1,7 +1,11 @@
 {
   "region": "連江縣",
   "regionCode": "lienchiang",
+<<<<<<< HEAD
   "updatedAt": "2026-05-12T22:34:22.468Z",
+=======
+  "updatedAt": "2026-05-12T22:14:51.390Z",
+>>>>>>> 5e9a2324d031a06e62f97dda2ef4eb062cbf5074
   "defaultMap": {
     "lat": 26.1505,
     "lng": 119.949,

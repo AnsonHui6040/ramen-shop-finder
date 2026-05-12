@@ -1,7 +1,11 @@
 {
   "region": "金門縣",
   "regionCode": "kinmen",
+<<<<<<< HEAD
   "updatedAt": "2026-05-12T22:34:22.456Z",
+=======
+  "updatedAt": "2026-05-12T22:14:51.387Z",
+>>>>>>> 5e9a2324d031a06e62f97dda2ef4eb062cbf5074
   "defaultMap": {
     "lat": 24.4493,
     "lng": 118.3767,

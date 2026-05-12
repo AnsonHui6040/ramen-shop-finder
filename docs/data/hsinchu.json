@@ -1,7 +1,11 @@
 {
   "region": "新竹縣",
   "regionCode": "hsinchu",
+<<<<<<< HEAD
   "updatedAt": "2026-05-12T22:34:22.375Z",
+=======
+  "updatedAt": "2026-05-12T22:14:51.323Z",
+>>>>>>> 5e9a2324d031a06e62f97dda2ef4eb062cbf5074
   "defaultMap": {
     "lat": 24.6682,
     "lng": 121.1553,
