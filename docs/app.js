@@ -51,6 +51,9 @@ function initMap() {
   }).addTo(state.map);
 
   state.markersLayer = L.layerGroup().addTo(state.map);
+
+  // 確保容器尺寸就緒後更新 Leaflet 內部大小
+  setTimeout(() => { if (state.map) state.map.invalidateSize(); }, 100);
 }
 
 function formatNumber(value) {
@@ -418,6 +421,7 @@ async function loadRegion(regionCode) {
   refreshFilters();
   renderStyleHelp();
   renderShops();
+  setTimeout(() => { if (state.map) state.map.invalidateSize(); }, 150);
 
   if (defaultMap?.lat && defaultMap?.lng) {
     state.map.setView([defaultMap.lat, defaultMap.lng], defaultMap.zoom || 12);
@@ -489,6 +493,8 @@ async function init() {
           );
         }
       }
+      // 展開/收合詳情面板後重算地圖尺寸
+      setTimeout(() => { if (state.map) state.map.invalidateSize(); }, 100);
     }
   });
 
@@ -547,6 +553,13 @@ async function init() {
     state.sortByCount = !state.sortByCount;
     els.sortCountBtn.classList.toggle("is-active", state.sortByCount);
     renderShops(true);
+  });
+
+  // window resize 貴 debounce 重算地圖尺寸
+  let _resizeTimer;
+  window.addEventListener("resize", () => {
+    clearTimeout(_resizeTimer);
+    _resizeTimer = setTimeout(() => { if (state.map) state.map.invalidateSize(); }, 200);
   });
 }
 
