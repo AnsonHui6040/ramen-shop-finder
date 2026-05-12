@@ -52,8 +52,15 @@ function initMap() {
 
   state.markersLayer = L.layerGroup().addTo(state.map);
 
-  // 確保容器尺寸就緒後更新 Leaflet 內部大小
-  setTimeout(() => { if (state.map) state.map.invalidateSize(); }, 100);
+  invalidateMapSoon(100);
+}
+
+function invalidateMapSoon(delay = 100) {
+  window.requestAnimationFrame(() => {
+    setTimeout(() => {
+      if (state.map) state.map.invalidateSize();
+    }, delay);
+  });
 }
 
 function formatNumber(value) {
@@ -420,12 +427,13 @@ async function loadRegion(regionCode) {
   setFiltersEnabled(true);
   refreshFilters();
   renderStyleHelp();
-  renderShops();
-  setTimeout(() => { if (state.map) state.map.invalidateSize(); }, 150);
 
   if (defaultMap?.lat && defaultMap?.lng) {
     state.map.setView([defaultMap.lat, defaultMap.lng], defaultMap.zoom || 12);
   }
+
+  renderShops(true);
+  invalidateMapSoon(150);
 
   els.dataUpdatedAt.textContent = `資料更新：${new Date(updatedAt).toLocaleDateString("zh-Hant")}`;
 }
@@ -494,7 +502,7 @@ async function init() {
         }
       }
       // 展開/收合詳情面板後重算地圖尺寸
-      setTimeout(() => { if (state.map) state.map.invalidateSize(); }, 100);
+      invalidateMapSoon(100);
     }
   });
 
@@ -555,11 +563,11 @@ async function init() {
     renderShops(true);
   });
 
-  // window resize 貴 debounce 重算地圖尺寸
+  // window resize debounce 重算地圖尺寸
   let _resizeTimer;
   window.addEventListener("resize", () => {
     clearTimeout(_resizeTimer);
-    _resizeTimer = setTimeout(() => { if (state.map) state.map.invalidateSize(); }, 200);
+    _resizeTimer = setTimeout(() => invalidateMapSoon(0), 200);
   });
 }
 
