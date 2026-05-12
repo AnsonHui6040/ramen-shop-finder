@@ -3,8 +3,13 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build:data": "node scripts/build-data.mjs",
+    "check": "npm run check:syntax",
+    "check:syntax": "node --check scripts/build-data.mjs && node --check scripts/dev-server.mjs && node --check docs/security.js && node --check docs/app.js",
     "predev": "npm run build:data",
     "dev": "node scripts/dev-server.mjs"
   },

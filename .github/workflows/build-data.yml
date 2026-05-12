@@ -3,11 +3,18 @@ name: Build ramen data
 on:
   push:
     paths:
+      - "package.json"
       - "data/excel/**.xlsx"
-      - "scripts/build-data.mjs"
+      - "scripts/**.mjs"
+      - "docs/index.html"
+      - "docs/*.js"
       - "data/style/type-profiles.json"
       - ".github/workflows/build-data.yml"
   workflow_dispatch:
+
+concurrency:
+  group: build-ramen-data-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -15,6 +22,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Checkout
@@ -26,7 +34,10 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --ignore-scripts --no-audit --no-fund
+
+      - name: Syntax check
+        run: npm run check
 
       - name: Build JSON
         run: npm run build:data
