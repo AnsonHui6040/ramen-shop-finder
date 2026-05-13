@@ -76,6 +76,15 @@
     if (typeof shop.ratingCount === "number" && !Number.isNaN(shop.ratingCount)) {
       payload.ratingCount = shop.ratingCount;
     }
+    if (typeof shop.priceMin === "number" && !Number.isNaN(shop.priceMin)) {
+      payload.priceMin = shop.priceMin;
+    }
+    if (typeof shop.priceMax === "number" && !Number.isNaN(shop.priceMax)) {
+      payload.priceMax = shop.priceMax;
+    }
+    if (shop.priceRangeLabel) {
+      payload.priceRangeLabel = shop.priceRangeLabel;
+    }
     return payload;
   }
 
@@ -96,17 +105,15 @@
    */
   function trackMapClick(shop, clickTarget, mapUrl) {
     trackEvent("map_click", {
-      shopId: shop.shopId || `${shop.name || ""}_${shop.address || ""}`,
-      shopName: shop.name || shop.nameOriginal || "",
-      styleCode: shop.styleCode || "",
-      styleName: shop.style4char || "",
-      region: shop.region || "",
-      district: shop.district || "",
+      ...buildShopBase(shop, clickTarget || "google_maps"),
       mapUrl: mapUrl || shop.mapUrl || "",
-      clickTarget: clickTarget || "google_maps",
     });
   }
 
+  function trackFilterChange(payload) {
+    trackEvent("filter_change", payload);
+  }
+
   // 掛載至全域，供 app.js 呼叫
-  window.ramenTracking = { trackShopClick, trackMapClick };
+  window.ramenTracking = { trackShopClick, trackMapClick, trackFilterChange };
 })();

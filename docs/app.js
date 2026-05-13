@@ -18,12 +18,14 @@ const els = {
   areaSelect: document.getElementById("area-select"),
   styleSelect: document.getElementById("style-select"),
   ratingSelect: document.getElementById("rating-select"),
+  priceSelect: document.getElementById("price-select"),
   sortCountBtn: document.getElementById("sort-count-btn"),
   chipSearch: document.getElementById("chip-search"),
   mRegionSelect: document.getElementById("m-region-select"),
   mDistrictSelect: document.getElementById("m-district-select"),
   mAreaSelect: document.getElementById("m-area-select"),
   mStyleSelect: document.getElementById("m-style-select"),
+  mPriceSelect: document.getElementById("m-price-select"),
   chipRatingRow: document.getElementById("chip-rating-row"),
   styleHelp: document.getElementById("style-help"),
   resultCount: document.getElementById("result-count"),
@@ -127,6 +129,35 @@ function renderStyleHelp() {
   `;
 }
 
+function getPriceRangeMatch(shop, priceRange) {
+  if (!priceRange) return true;
+  if (typeof shop.priceMin !== "number" || typeof shop.priceMax !== "number") return false;
+
+  switch (priceRange) {
+    case "under-200":
+      return shop.priceMin <= 200 || shop.priceMax <= 200;
+    case "200-300":
+      return shop.priceMin <= 300 && shop.priceMax >= 200;
+    case "300-400":
+      return shop.priceMin <= 400 && shop.priceMax >= 300;
+    case "over-400":
+      return shop.priceMax >= 400;
+    default:
+      return true;
+  }
+}
+
+function getCurrentFilters() {
+  return {
+    keyword: els.keywordInput.value.trim(),
+    district: els.districtSelect.value,
+    area: els.areaSelect.value,
+    styleCode: els.styleSelect.value,
+    minRating: els.ratingSelect.value,
+    priceRange: els.priceSelect.value,
+  };
+}
+
 function getFilteredShops() {
   const shops = state.regionData?.shops || [];
   const keyword = els.keywordInput.value.trim().toLowerCase();
@@ -134,6 +165,7 @@ function getFilteredShops() {
   const area = els.areaSelect.value;
   const styleCode = els.styleSelect.value;
   const minRating = Number(els.ratingSelect.value || 0);
+  const priceRange = els.priceSelect.value;
 
   return shops.filter((shop) => {
     const keywordMatch =
@@ -148,8 +180,9 @@ function getFilteredShops() {
     const areaMatch = !area || shop.areaTag === area;
     const styleMatch = !styleCode || shop.styleCode === styleCode;
     const ratingMatch = !minRating || (shop.rating || 0) >= minRating;
+    const priceMatch = getPriceRangeMatch(shop, priceRange);
 
-    return keywordMatch && districtMatch && areaMatch && styleMatch && ratingMatch;
+    return keywordMatch && districtMatch && areaMatch && styleMatch && ratingMatch && priceMatch;
   }).sort((a, b) =>
     state.sortByCount
       ? (b.ratingCount ?? 0) - (a.ratingCount ?? 0)
@@ -176,6 +209,7 @@ function renderDetail(shop) {
         <span class="tag"><span class="tag-hole"></span>${escapeHtml(shop.style4char || "-")}</span>
         <span class="tag"><span class="tag-hole"></span>★ ${escapeHtml(shop.rating ?? "-")}</span>
         <span class="tag"><span class="tag-hole"></span>${escapeHtml(formatNumber(shop.ratingCount))} 則評論</span>
+        <span class="tag"><span class="tag-hole"></span>${escapeHtml(shop.priceRangeLabel || "未提供")}</span>
       </div>
       <div class="detail-list">
         <div class="detail-row"><strong>縣市</strong><span>${escapeHtml(shop.region || "-")}${shop.district ? `／${escapeHtml(shop.district)}` : ""}</span></div>
@@ -183,6 +217,7 @@ function renderDetail(shop) {
         <div class="detail-row"><strong>地址</strong><span>${escapeHtml(shop.address || "未提供")}</span></div>
         <div class="detail-row"><strong>營業</strong><span>${escapeHtml(shop.openHours || "未提供")}</span></div>
         <div class="detail-row"><strong>電話</strong><span>${escapeHtml(shop.phone || "未提供")}</span></div>
+        <div class="detail-row"><strong>價格</strong><span>${escapeHtml(shop.priceRangeLabel || "未提供")}</span></div>
         <div class="detail-row"><strong>信心</strong><span>${escapeHtml(shop.styleConfidence ?? "-")}</span></div>
         <div class="detail-row"><strong>更新</strong><span>${escapeHtml(shop.lastVerified || "未提供")}</span></div>
         ${shop.notes ? `<div class="detail-row"><strong>備註</strong><span>${escapeHtml(shop.notes)}</span></div>` : ""}
@@ -236,6 +271,7 @@ function makeChip(label, active, onClick) {
 function renderChipFilters() {
   if (!state.regionData) return;
   const selRating = els.ratingSelect.value;
+  els.mPriceSelect.value = els.priceSelect.value;
 
   // Sync mobile style select
   if (els.mStyleSelect.options.length <= 1) {
@@ -262,21 +298,36 @@ function renderChipFilters() {
     renderShops(true);
   }));
   els.chipRatingRow.appendChild(makeChip("重設", false, () => {
+    const hadPriceFilter = Boolean(els.priceSelect.value);
     els.ratingSelect.value = "";
     els.districtSelect.value = "";
     els.areaSelect.value = "";
     els.styleSelect.value = "";
+    els.priceSelect.value = "";
+    els.mPriceSelect.value = "";
     els.keywordInput.value = "";
     els.chipSearch.value = "";
     state.sortByCount = false;
     els.sortCountBtn.classList.remove("is-active");
     refreshFilters();
     renderStyleHelp();
-    renderShops(true);
+    const resultCount = renderShops(true);
+    if (hadPriceFilter) trackPriceFilterChange(resultCount);
   }));
 }
 
 function renderRegionSummary() {}
+
+function trackPriceFilterChange(resultCount) {
+  if (!window.ramenTracking) return;
+  window.ramenTracking.trackFilterChange({
+    filterName: "priceRange",
+    filterValue: els.priceSelect.value,
+    region: state.currentRegionCode,
+    resultCount,
+    filters: getCurrentFilters(),
+  });
+}
 
 function renderShops(fitMap = false) {
   const allShops = state.regionData?.shops || [];
@@ -291,7 +342,8 @@ function renderShops(fitMap = false) {
     state.selectedShopId = "";
     renderDetail(null);
     els.shopList.innerHTML = '<div class="empty-state">沒有符合條件的店家。</div>';
-    return;
+    renderChipFilters();
+    return shops.length;
   }
 
   const selectedStillVisible = shops.some((shop) => shop.shopId === state.selectedShopId);
@@ -316,6 +368,7 @@ function renderShops(fitMap = false) {
         <span class="stamp-rect">${escapeHtml(shop.styleCode || "-")}</span>
         <span class="tag"><span class="tag-hole"></span>${escapeHtml(shop.style4char || "-")}</span>
         <span class="tag"><span class="tag-hole"></span>${escapeHtml(shop.district || "-")}</span>
+        <span class="tag"><span class="tag-hole"></span>${escapeHtml(shop.priceRangeLabel || "未提供")}</span>
         ${shop.areaTag ? `<span class="tag"><span class="tag-hole"></span>${escapeHtml(shop.areaTag)}</span>` : ""}
       </div>
       <p>★ ${escapeHtml(shop.rating ?? "-")}　評論 ${escapeHtml(formatNumber(shop.ratingCount))}</p>
@@ -395,6 +448,7 @@ function renderShops(fitMap = false) {
   }
 
   renderChipFilters();
+  return shops.length;
 }
 
 function refreshFilters() {
@@ -454,8 +508,8 @@ async function loadRegion(regionCode) {
 function setFiltersEnabled(enabled) {
   const targets = [
     els.keywordInput, els.districtSelect, els.areaSelect, els.styleSelect,
-    els.ratingSelect, els.sortCountBtn, els.chipSearch,
-    els.mDistrictSelect, els.mAreaSelect, els.mStyleSelect,
+    els.ratingSelect, els.priceSelect, els.sortCountBtn, els.chipSearch,
+    els.mDistrictSelect, els.mAreaSelect, els.mStyleSelect, els.mPriceSelect,
   ];
   targets.forEach((el) => { el.disabled = !enabled; });
   els.chipRatingRow.querySelectorAll("button").forEach((btn) => { btn.disabled = !enabled; });
@@ -559,6 +613,11 @@ async function init() {
     renderStyleHelp();
     renderShops(true);
   });
+  els.mPriceSelect.addEventListener("change", () => {
+    els.priceSelect.value = els.mPriceSelect.value;
+    const resultCount = renderShops(true);
+    trackPriceFilterChange(resultCount);
+  });
   els.districtSelect.addEventListener("change", () => {
     els.areaSelect.value = "";
     refreshFilters();
@@ -570,6 +629,11 @@ async function init() {
     renderShops(true);
   });
   els.ratingSelect.addEventListener("change", () => renderShops(true));
+  els.priceSelect.addEventListener("change", () => {
+    els.mPriceSelect.value = els.priceSelect.value;
+    const resultCount = renderShops(true);
+    trackPriceFilterChange(resultCount);
+  });
   els.sortCountBtn.addEventListener("click", () => {
     state.sortByCount = !state.sortByCount;
     els.sortCountBtn.classList.toggle("is-active", state.sortByCount);

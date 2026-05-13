@@ -32,6 +32,28 @@ function toNonNegativeInteger(value) {
   return Math.round(num);
 }
 
+function normalizePriceRange(row) {
+  let priceMin = toNonNegativeInteger(row.price_min || row.priceMin);
+  let priceMax = toNonNegativeInteger(row.price_max || row.priceMax);
+
+  if (priceMin === null || priceMax === null) {
+    return {
+      priceMin: null,
+      priceMax: null,
+      priceRangeLabel: normalizeText(row.price_range_label || row.priceRangeLabel, 50),
+    };
+  }
+
+  if (priceMin > priceMax) {
+    [priceMin, priceMax] = [priceMax, priceMin];
+  }
+
+  const priceRangeLabel =
+    normalizeText(row.price_range_label || row.priceRangeLabel, 50) || `$${priceMin}–$${priceMax}`;
+
+  return { priceMin, priceMax, priceRangeLabel };
+}
+
 function normalizeText(value, maxLength = 500) {
   if (value === null || value === undefined) return "";
   const text = String(value)
@@ -76,6 +98,7 @@ function readSheet(workbook, sheetName) {
 function normalizeShop(row, profilesMap, regionCode) {
   const styleCode = normalizeText(row.style_code || row.styleCode, 20).toUpperCase();
   const profile = profilesMap.get(styleCode);
+  const priceRange = normalizePriceRange(row);
 
   return {
     shopId: normalizeText(row.shop_id || row.shopId, 80),
@@ -92,6 +115,7 @@ function normalizeShop(row, profilesMap, regionCode) {
     styleConfidence: toBoundedNumber(row.style_confidence || row.styleConfidence, 0, 100),
     rating: toBoundedNumber(row.rating, 0, 5),
     ratingCount: toNonNegativeInteger(row.rating_count || row.ratingCount),
+    ...priceRange,
     address: normalizeText(row.address, 240),
     lat: toBoundedNumber(row.lat, -90, 90),
     lng: toBoundedNumber(row.lng, -180, 180),
