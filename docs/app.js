@@ -188,7 +188,7 @@ function renderDetail(shop) {
         ${shop.notes ? `<div class="detail-row"><strong>備註</strong><span>${escapeHtml(shop.notes)}</span></div>` : ""}
       </div>
       <div class="detail-links">
-        ${shop.mapUrl ? `<a href="${escapeHtml(shop.mapUrl)}" target="_blank" rel="noreferrer">Google Maps</a>` : ""}
+        ${shop.mapUrl ? `<a href="${escapeHtml(shop.mapUrl)}" target="_blank" rel="noreferrer" data-link-kind="map">Google Maps</a>` : ""}
         ${shop.website ? `<a href="${escapeHtml(shop.website)}" target="_blank" rel="noreferrer">官方網站</a>` : ""}
       </div>
     </article>
@@ -196,7 +196,7 @@ function renderDetail(shop) {
 
   // 追蹤詳情面板中的地圖連結點擊（fire-and-forget，不阻擋開啟）
   if (window.ramenTracking) {
-    els.detailContent.querySelectorAll(".detail-links a[href]").forEach((link) => {
+    els.detailContent.querySelectorAll('.detail-links a[data-link-kind="map"][href]').forEach((link) => {
       link.addEventListener("click", () => {
         window.ramenTracking.trackMapClick(
           { ...shop, region: state.currentRegionCode },
@@ -323,7 +323,7 @@ function renderShops(fitMap = false) {
       ${shop.openHours ? `<p>${escapeHtml(shop.openHours)}</p>` : ""}
       ${shop.notes ? `<p>${escapeHtml(shop.notes)}</p>` : ""}
       <div class="shop-links">
-        ${shop.mapUrl ? `<a href="${escapeHtml(shop.mapUrl)}" target="_blank" rel="noreferrer">Google Maps</a>` : ""}
+        ${shop.mapUrl ? `<a href="${escapeHtml(shop.mapUrl)}" target="_blank" rel="noreferrer" data-link-kind="map">Google Maps</a>` : ""}
         ${shop.website ? `<a href="${escapeHtml(shop.website)}" target="_blank" rel="noreferrer">官方網站</a>` : ""}
       </div>
     `;
@@ -332,7 +332,7 @@ function renderShops(fitMap = false) {
       const clickedLink = event.target.closest("a");
       if (clickedLink) {
         // map_click: fire-and-forget，不阻擋連結開啟
-        if (window.ramenTracking) {
+        if (window.ramenTracking && clickedLink.dataset.linkKind === "map") {
           window.ramenTracking.trackMapClick(
             { ...shop, region: state.currentRegionCode },
             "google_maps",
