@@ -6,6 +6,7 @@ const state = {
   profiles: [],
   map: null,
   markersLayer: null,
+  markersById: {},
   selectedShopId: "",
   sortByCount: false,
 };
@@ -216,6 +217,13 @@ function setSelectedShop(shop, options = {}) {
   }
 }
 
+/** 只更新 is-active class，不重建整個列表 */
+function updateActiveShopCard() {
+  document.querySelectorAll(".shop-card").forEach((card) => {
+    card.classList.toggle("is-active", card.dataset.shopId === state.selectedShopId);
+  });
+}
+
 function makeChip(label, active, onClick) {
   const btn = document.createElement("button");
   btn.type = "button";
@@ -295,12 +303,13 @@ function renderShops(fitMap = false) {
   renderDetail(activeShop);
 
   const bounds = [];
-  const markersById = {};
+  state.markersById = {};
 
   shops.forEach((shop) => {
     const isActive = shop.shopId === state.selectedShopId;
     const card = document.createElement("article");
     card.className = `shop-card${isActive ? " is-active" : ""}`;
+    card.dataset.shopId = shop.shopId;
     card.innerHTML = `
       <h3>${escapeHtml(shop.name)}</h3>
       <div class="shop-meta">
@@ -339,7 +348,11 @@ function renderShops(fitMap = false) {
         );
       }
       setSelectedShop(shop);
-      renderShops();
+      updateActiveShopCard();
+      // 開啟對應的 marker popup
+      if (state.markersById[shop.shopId]) {
+        state.markersById[shop.shopId].openPopup();
+      }
     });
 
     els.shopList.appendChild(card);
@@ -366,10 +379,10 @@ function renderShops(fitMap = false) {
           );
         }
         setSelectedShop(shop, { panToMarker: false });
-        renderShops();
+        updateActiveShopCard();
       });
       marker.addTo(state.markersLayer);
-      markersById[shop.shopId] = marker;
+      state.markersById[shop.shopId] = marker;
       bounds.push([shop.lat, shop.lng]);
     }
   });
@@ -377,8 +390,8 @@ function renderShops(fitMap = false) {
   if (fitMap && bounds.length) {
     state.map.fitBounds(bounds, { padding: [36, 36] });
   }
-  if (state.selectedShopId && markersById[state.selectedShopId]) {
-    markersById[state.selectedShopId].openPopup();
+  if (state.selectedShopId && state.markersById[state.selectedShopId]) {
+    state.markersById[state.selectedShopId].openPopup();
   }
 
   renderChipFilters();
