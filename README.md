@@ -5,10 +5,11 @@
 
 ## 目前版本
 
-- 先支援 **台中** 範例資料
-- 每個大地區一個 Excel，例如 `data/excel/taichung.xlsx`
+- 支援台灣 **全 22 縣市** 資料（台北、新北、桃園、台中、台南、高雄等）
+- 每個縣市一個 Excel，檔名以編號為前綴，例如 `data/excel/01-taipei.xlsx`
 - GitHub Actions 會在 Excel 更新後自動轉成 `docs/data/*.json`
 - 前端為靜態頁面，可直接部署到 GitHub Pages
+- 支援 Docker 容器化部署與 Kubernetes 佈署
 
 ## 實作網頁
 
@@ -21,7 +22,10 @@
 ramen-shop-finder/
 ├─ data/
 │  ├─ excel/
-│  │  └─ taichung.xlsx
+│  │  ├─ 01-taipei.xlsx
+│  │  ├─ 02-new-taipei.xlsx
+│  │  ├─ 03-taoyuan.xlsx
+│  │  └─ ... (共 22 個縣市)
 │  └─ style/
 │     └─ type-profiles.json
 ├─ scripts/
@@ -30,10 +34,20 @@ ramen-shop-finder/
 ├─ docs/
 │  ├─ index.html
 │  ├─ app.js
+│  ├─ config.js
+│  ├─ security.js
+│  ├─ tracking.js
 │  ├─ style.css
 │  └─ data/
+│     ├─ taipei.json
 │     ├─ taichung.json
+│     ├─ ... (共 22 個縣市)
+│     ├─ type-profiles.json
 │     └─ meta.json
+├─ k8s/
+│  ├─ deployment.yaml
+│  └─ service.yaml
+├─ Dockerfile
 └─ .github/
    └─ workflows/
       └─ build-data.yml
@@ -137,6 +151,33 @@ http://127.0.0.1:5173
 - `docs/data/meta.json`
 
 Workflow 目前會先安裝依賴、執行 `npm run check`，再重建 JSON。為降低供應鏈風險，CI 安裝依賴時會使用 `--ignore-scripts`，避免第三方套件在安裝階段執行任意 lifecycle script。
+
+## Docker 部署
+
+建置映像檔：
+
+```bash
+docker build -t ramen-shop-finder .
+```
+
+啟動容器（對應 port 8080）：
+
+```bash
+docker run -p 8080:80 ramen-shop-finder
+```
+
+映像檔採用多階段建置：先以 `node:20-alpine` 執行資料建置，再以 `nginx:alpine` 提供靜態服務。
+
+## Kubernetes 部署
+
+套用 `k8s/` 目錄下的設定：
+
+```bash
+kubectl apply -f k8s/
+```
+
+- `k8s/deployment.yaml`：部署 `ghcr.io/ansonhui6040/ramen-shop-finder:latest`，預設 1 個 replica
+- `k8s/service.yaml`：以 `ClusterIP` 類型在叢集內部開放 port 80
 
 ## 安全性與維護備註
 
